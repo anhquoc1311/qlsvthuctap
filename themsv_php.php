@@ -26,12 +26,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $khoa = $_POST['khoa'];
         $nhomnguoihuongdan = $_POST['nhomnguoihuongdan'];
 
-        // Kiểm tra mssv có đúng 10 số không
-        if (strlen($mssv) !== 10 || !is_numeric($mssv)) {
-            $notification = "MSSV phải có 10 số và là số nguyên.";
-        } elseif (strlen($sdt) !== 10 || !is_numeric($sdt)) {
-            // Kiểm tra sdt có đúng 10 số không
-            $notification = "Số điện thoại phải có 10 số và là số nguyên.";
+       // Kiểm tra mssv có đúng 10 số không
+       if (strlen($mssv) !== 10 || !is_numeric($mssv)) {
+           $notification = "MSSV phải có 10 số và là số nguyên.";
+       } elseif (strlen($sdt) !== 10 || !is_numeric($sdt)) {
+           // Kiểm tra sdt có đúng 10 số không
+           $notification = "Số điện thoại phải có 10 số và là số nguyên.";
         } else {
             // Kiểm tra xem MSSV đã tồn tại chưa
             $checkQuery = "SELECT * FROM sinhvien WHERE mssv = '$mssv'";

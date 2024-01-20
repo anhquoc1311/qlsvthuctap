@@ -222,7 +222,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <th>Ngành</th>
             <th>Khóa</th>
             <th>Nhóm người hướng dẫn</th>
-            <th>Thao tác</th>
+            
         </tr>
 
         <?php
@@ -246,7 +246,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             echo "<td>
                     <form method='POST'>
                         <input type='hidden' name='delete_id' value='{$row['id']}'>
-                        <button type='submit' name='delete'>Xóa</button>
+                       
                     </form>
              
                   </td>";
