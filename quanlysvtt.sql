@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 20, 2024 at 08:10 AM
+-- Generation Time: Jan 22, 2024 at 08:04 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -36,6 +36,27 @@ CREATE TABLE `congviec` (
   `ngayketthuc` date NOT NULL,
   `nhanxet` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `dangky`
+--
+
+CREATE TABLE `dangky` (
+  `tentk` text NOT NULL,
+  `username` text NOT NULL,
+  `password` text NOT NULL,
+  `quyen` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `dangky`
+--
+
+INSERT INTO `dangky` (`tentk`, `username`, `password`, `quyen`) VALUES
+('Vnpt ', 'admin', 'Vnpt@123', 'admin'),
+('quocc', 'q', 'Quoc@2002', 'user');
 
 -- --------------------------------------------------------
 
@@ -97,7 +118,8 @@ CREATE TABLE `nganh` (
 INSERT INTO `nganh` (`nganh`, `kyhieu`) VALUES
 ('cntt', '1ctt'),
 ('cntt2', '2'),
-('kt', '1');
+('khoahoc', '2'),
+('kinhte1', 'kt');
 
 -- --------------------------------------------------------
 
@@ -125,7 +147,7 @@ CREATE TABLE `nguoihuongdan` (
 --
 
 INSERT INTO `nguoihuongdan` (`id_nguoihuongdan`, `ten`, `sdt`, `gmail`, `chucdanh`, `phong`, `username`, `password`, `zalo`, `facebook`, `github`, `avata`) VALUES
-(1, 'a', 0, 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a');
+(4, 'anh thư', 1, 'anh@gmail.ocm', 'nhân viên', '1', 'anhquoc', '123456', 'zalo', 'facde', 'g', 'g');
 
 -- --------------------------------------------------------
 
@@ -156,6 +178,34 @@ CREATE TABLE `nhomthuctap` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `nhomtt`
+--
+
+CREATE TABLE `nhomtt` (
+  `id` int(11) NOT NULL,
+  `tennhom` varchar(100) NOT NULL,
+  `detai` varchar(100) NOT NULL,
+  `hotensinhvien` varchar(100) NOT NULL,
+  `ngaybd` date NOT NULL,
+  `ngaykt` date NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `nhomtt`
+--
+
+INSERT INTO `nhomtt` (`id`, `tennhom`, `detai`, `hotensinhvien`, `ngaybd`, `ngaykt`) VALUES
+(1, 'as', 'qlsv', 'hi', '2024-01-17', '2024-01-18'),
+(2, 'thm', '1', '1', '2024-01-11', '2024-01-26'),
+(3, 'nhóm 1', '1', 'Trần Anh Quốc', '2024-01-17', '2024-02-03'),
+(4, '1', '1', '', '2024-01-17', '2024-01-26'),
+(5, '11', '11', '', '2024-01-19', '2024-02-03'),
+(6, 'sâ', '11', 'thư', '2024-01-11', '2024-02-04'),
+(7, 'aaa', 'aaa', 'Trần Anh Quốc', '2024-01-17', '2024-02-02');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `sinhvien`
 --
 
@@ -179,7 +229,8 @@ CREATE TABLE `sinhvien` (
 --
 
 INSERT INTO `sinhvien` (`mssv`, `hotensinhvien`, `gioitinh`, `sdt`, `gmail`, `diachi`, `malop`, `truonghoc`, `nganh`, `khoa`, `nhomnguoihuongdan`, `id`) VALUES
-('2000416222', 'anhquoc', 'Nam', '0795915320', 'quoc@gmail.com', '1', '1', 'kt', 'cntt', '1', '3', 0);
+('2000416233', 'anhquoc', 'Nam', '0795915320', 'a@gmail.com', '1', '1', 'Sư phạm kỹ thuật', 'khoahoc', '1', '2', 101),
+('2000416210', 'Trần Anh Quốc', 'Nam', '0795915320', 'anhquoc@gmail.com', 'vĩnh long', '1ctt', 'truongkinhte', 'cntt', '45', 'nhom1', 102);
 
 -- --------------------------------------------------------
 
@@ -256,6 +307,12 @@ ALTER TABLE `nhomthuctap`
   ADD PRIMARY KEY (`tennhomthuctap`);
 
 --
+-- Indexes for table `nhomtt`
+--
+ALTER TABLE `nhomtt`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `sinhvien`
 --
 ALTER TABLE `sinhvien`
@@ -283,7 +340,19 @@ ALTER TABLE `truong`
 -- AUTO_INCREMENT for table `nguoihuongdan`
 --
 ALTER TABLE `nguoihuongdan`
-  MODIFY `id_nguoihuongdan` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_nguoihuongdan` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `nhomtt`
+--
+ALTER TABLE `nhomtt`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
+-- AUTO_INCREMENT for table `sinhvien`
+--
+ALTER TABLE `sinhvien`
+  MODIFY `id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=103;
 
 --
 -- Constraints for dumped tables
