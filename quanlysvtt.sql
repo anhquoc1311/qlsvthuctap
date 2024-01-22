@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 22, 2024 at 08:04 AM
+-- Generation Time: Jan 22, 2024 at 11:38 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -36,6 +36,14 @@ CREATE TABLE `congviec` (
   `ngayketthuc` date NOT NULL,
   `nhanxet` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `congviec`
+--
+
+INSERT INTO `congviec` (`id_cv`, `tencongviec`, `tendetai`, `tennhomnguoihuongdan`, `ngaybatdau`, `ngayketthuc`, `nhanxet`) VALUES
+(1, 'làm form', 'quanlyhethong', 'nnn', '2024-01-08', '2024-01-11', 'làm cho hệ thống tốt'),
+(2, '1', 'quanlyhethong', '1', '2024-01-25', '2024-02-03', '1');
 
 -- --------------------------------------------------------
 
@@ -160,19 +168,9 @@ CREATE TABLE `nhomnguoihd` (
   `tennhomnguoihuongdan` varchar(100) NOT NULL,
   `tennhomthuctap` varchar(100) NOT NULL,
   `kithuctap` varchar(100) NOT NULL,
-  `tendetai` varchar(100) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `nhomthuctap`
---
-
-CREATE TABLE `nhomthuctap` (
-  `tennhomthuctap` varchar(100) NOT NULL,
-  `kithuctap` varchar(100) NOT NULL,
-  `tendetai` varchar(100) NOT NULL
+  `tendetai` varchar(100) NOT NULL,
+  `thoigianbatdau` datetime DEFAULT NULL,
+  `thoigianketthuc` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -201,7 +199,8 @@ INSERT INTO `nhomtt` (`id`, `tennhom`, `detai`, `hotensinhvien`, `ngaybd`, `ngay
 (4, '1', '1', '', '2024-01-17', '2024-01-26'),
 (5, '11', '11', '', '2024-01-19', '2024-02-03'),
 (6, 'sâ', '11', 'thư', '2024-01-11', '2024-02-04'),
-(7, 'aaa', 'aaa', 'Trần Anh Quốc', '2024-01-17', '2024-02-02');
+(7, 'aaa', 'aaa', 'Trần Anh Quốc', '2024-01-17', '2024-02-02'),
+(8, 'nnn', 'ffff', 'aaaaaaaaaa', '2024-01-17', '2024-01-25');
 
 -- --------------------------------------------------------
 
@@ -243,6 +242,14 @@ CREATE TABLE `tendetai` (
   `mota` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `tendetai`
+--
+
+INSERT INTO `tendetai` (`tendetai`, `mota`) VALUES
+('quanlyhethong', '1'),
+('quanlysinhvien', 'làm 1 web quản lý sinh viên');
+
 -- --------------------------------------------------------
 
 --
@@ -275,6 +282,12 @@ ALTER TABLE `congviec`
   ADD KEY `tendetai` (`tendetai`);
 
 --
+-- Indexes for table `danhgia`
+--
+ALTER TABLE `danhgia`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `kythuctap`
 --
 ALTER TABLE `kythuctap`
@@ -297,14 +310,7 @@ ALTER TABLE `nguoihuongdan`
 -- Indexes for table `nhomnguoihd`
 --
 ALTER TABLE `nhomnguoihd`
-  ADD PRIMARY KEY (`id_nhomnguoihd`),
-  ADD KEY `tennhomthuctap` (`tennhomthuctap`);
-
---
--- Indexes for table `nhomthuctap`
---
-ALTER TABLE `nhomthuctap`
-  ADD PRIMARY KEY (`tennhomthuctap`);
+  ADD PRIMARY KEY (`id_nhomnguoihd`);
 
 --
 -- Indexes for table `nhomtt`
@@ -337,16 +343,40 @@ ALTER TABLE `truong`
 --
 
 --
+-- AUTO_INCREMENT for table `congviec`
+--
+ALTER TABLE `congviec`
+  MODIFY `id_cv` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `danhgia`
+--
+ALTER TABLE `danhgia`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `kythuctap`
+--
+ALTER TABLE `kythuctap`
+  MODIFY `id_kythuctap` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `nguoihuongdan`
 --
 ALTER TABLE `nguoihuongdan`
   MODIFY `id_nguoihuongdan` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
+-- AUTO_INCREMENT for table `nhomnguoihd`
+--
+ALTER TABLE `nhomnguoihd`
+  MODIFY `id_nhomnguoihd` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `nhomtt`
 --
 ALTER TABLE `nhomtt`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `sinhvien`
@@ -369,12 +399,6 @@ ALTER TABLE `congviec`
 --
 ALTER TABLE `kythuctap`
   ADD CONSTRAINT `kythuctap_ibfk_1` FOREIGN KEY (`tendetai`) REFERENCES `tendetai` (`tendetai`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
--- Constraints for table `nhomnguoihd`
---
-ALTER TABLE `nhomnguoihd`
-  ADD CONSTRAINT `nhomnguoihd_ibfk_1` FOREIGN KEY (`tennhomthuctap`) REFERENCES `nhomthuctap` (`tennhomthuctap`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `sinhvien`
