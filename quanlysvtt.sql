@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 22, 2024 at 11:38 AM
+-- Generation Time: Jan 23, 2024 at 08:49 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -165,13 +165,28 @@ INSERT INTO `nguoihuongdan` (`id_nguoihuongdan`, `ten`, `sdt`, `gmail`, `chucdan
 
 CREATE TABLE `nhomnguoihd` (
   `id_nhomnguoihd` int(11) NOT NULL,
-  `tennhomnguoihuongdan` varchar(100) NOT NULL,
+  `tennguoihuongdan` varchar(100) NOT NULL,
   `tennhomthuctap` varchar(100) NOT NULL,
   `kithuctap` varchar(100) NOT NULL,
   `tendetai` varchar(100) NOT NULL,
   `thoigianbatdau` datetime DEFAULT NULL,
   `thoigianketthuc` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `nhomnguoihd`
+--
+
+INSERT INTO `nhomnguoihd` (`id_nhomnguoihd`, `tennguoihuongdan`, `tennhomthuctap`, `kithuctap`, `tendetai`, `thoigianbatdau`, `thoigianketthuc`) VALUES
+(2, '', '', '', '', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(3, '', '', '', '', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(4, '1', '1', '1', '1', '2024-01-04 14:20:00', '2024-01-19 14:20:00'),
+(5, '1', '1', '1', '1', '2024-01-12 14:38:00', '2024-01-20 14:38:00'),
+(6, 'nhóm 1', 'nhóm 1', 'nhóm 1', 'nhóm 1', '2024-01-23 14:41:00', '2024-01-24 14:41:00'),
+(7, 'nhóm 1', 'nhóm 1', 'nhóm 1', 'nhóm 1', '2024-01-23 14:41:00', '2024-01-24 14:41:00'),
+(8, 'nhóm 1', 'nhóm 1', 'nhóm 1', 'nhóm 1', '2024-01-23 14:41:00', '2024-01-24 14:41:00'),
+(9, 'nhóm 1', 'nhóm 1', 'nhóm 1', 'nhóm 1', '2024-01-23 14:41:00', '2024-01-24 14:41:00'),
+(10, '1', '1', '1', '1', '2024-01-11 14:46:00', '2024-02-08 14:46:00');
 
 -- --------------------------------------------------------
 
@@ -370,7 +385,7 @@ ALTER TABLE `nguoihuongdan`
 -- AUTO_INCREMENT for table `nhomnguoihd`
 --
 ALTER TABLE `nhomnguoihd`
-  MODIFY `id_nhomnguoihd` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_nhomnguoihd` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `nhomtt`
