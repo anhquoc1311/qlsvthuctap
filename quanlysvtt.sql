@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 23, 2024 at 08:49 AM
+-- Generation Time: Jan 25, 2024 at 05:09 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -92,6 +92,20 @@ CREATE TABLE `danhgia` (
   `diemkhananggiaiquyetcongviec` float NOT NULL,
   `danhgiachung` float NOT NULL,
   `ngaydanhgia` date NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `danhgiaandanh`
+--
+
+CREATE TABLE `danhgiaandanh` (
+  `id_danhgia` int(11) NOT NULL,
+  `hoten_nguoidanhgia` varchar(100) NOT NULL,
+  `mucdohailong` varchar(100) NOT NULL,
+  `nhận xet` text NOT NULL,
+  `danhgiakhac` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -215,7 +229,9 @@ INSERT INTO `nhomtt` (`id`, `tennhom`, `detai`, `hotensinhvien`, `ngaybd`, `ngay
 (5, '11', '11', '', '2024-01-19', '2024-02-03'),
 (6, 'sâ', '11', 'thư', '2024-01-11', '2024-02-04'),
 (7, 'aaa', 'aaa', 'Trần Anh Quốc', '2024-01-17', '2024-02-02'),
-(8, 'nnn', 'ffff', 'aaaaaaaaaa', '2024-01-17', '2024-01-25');
+(8, 'nnn', 'ffff', 'aaaaaaaaaa', '2024-01-17', '2024-01-25'),
+(9, '2222', '2222', 'Trần Anh Quốc', '2024-01-12', '2024-01-28'),
+(10, '22222', '2222222', 'Trần Anh Quốc', '2024-01-26', '2024-01-26');
 
 -- --------------------------------------------------------
 
@@ -303,6 +319,12 @@ ALTER TABLE `danhgia`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `danhgiaandanh`
+--
+ALTER TABLE `danhgiaandanh`
+  ADD PRIMARY KEY (`id_danhgia`);
+
+--
 -- Indexes for table `kythuctap`
 --
 ALTER TABLE `kythuctap`
@@ -370,6 +392,12 @@ ALTER TABLE `danhgia`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `danhgiaandanh`
+--
+ALTER TABLE `danhgiaandanh`
+  MODIFY `id_danhgia` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `kythuctap`
 --
 ALTER TABLE `kythuctap`
@@ -391,7 +419,7 @@ ALTER TABLE `nhomnguoihd`
 -- AUTO_INCREMENT for table `nhomtt`
 --
 ALTER TABLE `nhomtt`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `sinhvien`
