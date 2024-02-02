@@ -118,6 +118,7 @@ if (isset($_POST['export_pdf'])) {
 <form method="post" action="nhomhd.php">
     <input type="submit" name="export_pdf" value="Xuất PDF">
 </form>
+<h1>form nhóm người hướng dẫn phần xuất file bdf đóng lại hoặc làm thành form khác mà không có nó tại này tui làm mẫu xuất file</h1>
 <h2>Thêm Bản Ghi</h2>
 <form method="post" action="nhomhd.php">
     <label>Tên Người Hướng Dẫn:</label>
