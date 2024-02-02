@@ -8,7 +8,9 @@ if ($mysqli->connect_error) {
 $notification = "";
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Thực hiện thêm đánh giá
     if (isset($_POST['add'])) {
+        // Lấy dữ liệu từ form
         $hotensinhvien = $_POST['hotensinhvien'];
         $nhomnguoihuongdan = $_POST['nhomnguoihuongdan'];
         $ythuckyluat = $_POST['ythuckyluat'];
@@ -25,33 +27,44 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $diemkhanangnhom = $_POST['diemkhanangnhom'];
         $khananggiaiquyetcongviec = $_POST['khananggiaiquyetcongviec'];
         $diemkhananggiaiquyetcongviec = $_POST['diemkhananggiaiquyetcongviec'];
-        $danhgiachung = ($_POST['diemythuckyluat'] + $_POST['diemtuanthuthoigian'] + $_POST['diemkienthuc'] + $_POST['diemkynangnghe'] + $_POST['diemkinangdoclap'] + $_POST['diemkhanangnhom'] + $_POST['diemkhananggiaiquyetcongviec']) / 7;
+        $danhgiachung = ($_POST['diemythuckyluat'] + $_POST['diemtuanthuthoigian'] + $_POST['diemkienthuc'] + $_POST['diemkynangnghe'] + $_POST['diemkinangdoclap'] + $_POST['diemkhanangnhom'] + $_POST['diemkhananggiaiquyetcongviec']) ;
         $ngaydanhgia = $_POST['ngaydanhgia'];
 
-        $query = "INSERT INTO danhgia (hotensinhvien, nhomnguoihuongdan, ythuckyluat, diemthuckyluat, tuanthuthoigian, diemtuanthuthoigian, kienthuc, diemkienthuc, kynangnghe, diemkynangnghe, kinangdoclap, diemkinangdoclap, khanangnhom, diemkhanangnhom, khananggiaiquyetcongviec, diemkhananggiaiquyetcongviec, danhgiachung, ngaydanhgia) VALUES ('$hotensinhvien', '$nhomnguoihuongdan', '$ythuckyluat', '$diemythuckyluat', '$tuanthuthoigian', '$diemtuanthuthoigian', '$kienthuc', '$diemkienthuc', '$kynangnghe', '$diemkynangnghe', '$kinangdoclap', '$diemkinangdoclap', '$khanangnhom', '$diemkhanangnhom', '$khananggiaiquyetcongviec', '$diemkhananggiaiquyetcongviec', '$danhgiachung', '$ngaydanhgia')";
-
+        $query = "INSERT INTO danhgia (hotensinhvien, nhomnguoihuongdan, ythuckyluat, diemythuckyluat, tuanthuthoigian, diemtuanthuthoigian, kienthuc, diemkienthuc, kynangnghe, diemkynangnghe, kinangdoclap, diemkinangdoclap, khanangnhom, diemkhanangnhom, khananggiaiquyetcongviec, diemkhananggiaiquyetcongviec, danhgiachung, ngaydanhgia) VALUES ('$hotensinhvien', '$nhomnguoihuongdan', '$ythuckyluat', '$diemythuckyluat', '$tuanthuthoigian', '$diemtuanthuthoigian', '$kienthuc', '$diemkienthuc', '$kynangnghe', '$diemkynangnghe', '$kinangdoclap', '$diemkinangdoclap', '$khanangnhom', '$diemkhanangnhom', '$khananggiaiquyetcongviec', '$diemkhananggiaiquyetcongviec', '$danhgiachung', '$ngaydanhgia')";
 
         if ($mysqli->query($query)) {
             $notification = "Thêm đánh giá thành công.";
         } else {
             $notification = "Thêm đánh giá thất bại: " . $mysqli->error;
         }
-    } elseif (isset($_POST['delete'])) {
+        
+    }
+    // Thực hiện xóa đánh giá
+    elseif (isset($_POST['delete'])) {
         $id = $_POST['delete_id'];
         if ($mysqli->query("DELETE FROM danhgia WHERE id=$id")) {
             $notification = "Xóa đánh giá thành công.";
         } else {
             $notification = "Xóa đánh giá thất bại: " . $mysqli->error;
         }
-    } elseif (isset($_POST['edit'])) {
+    }
+
+    // Thực hiện sửa đánh giá
+    elseif (isset($_POST['edit'])) {
         $id = $_POST['edit_id'];
-        $result = $mysqli->query("SELECT * FROM danhgia WHERE id=$id");
+     // Ensure $id_to_edit is set and is a valid number
+     if (!isset($id_to_edit) || !is_numeric($id_to_edit)) {
+        die('Invalid ID for editing.');
+    }
 
-        if (!$result) {
-            die('Error retrieving data for editing: ' . $mysqli->error);
-        }
+    $result = $mysqli->query("SELECT * FROM danhgia WHERE id=$id_to_edit");
 
-        $row_to_edit = $result->fetch_assoc();
+    // Check if the query was successful
+    if (!$result) {
+        die('Error retrieving data for editing: ' . $mysqli->error);
+    }
+
+    $row_to_edit = $result->fetch_assoc();
 
         $new_hotensinhvien = $_POST['new_hotensinhvien'];
         $new_nhomnguoihuongdan = $_POST['new_nhomnguoihuongdan'];
@@ -72,7 +85,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $new_danhgiachung = ($new_diemythuckyluat + $new_diemtuanthuthoigian + $new_diemkienthuc + $new_diemkynangnghe + $new_diemkinangdoclap + $new_diemkhanangnhom + $new_diemkhananggiaiquyetcongviec) / 7;
         $new_ngaydanhgia = $_POST['new_ngaydanhgia'];
 
-        $query = "UPDATE danhgia SET hotensinhvien='$new_hotensinhvien', nhomnguoihuongdan='$new_nhomnguoihuongdan', ythuckyluat='$new_ythuckyluat', diemythuckyluat='$new_diemythuckyluat', tuanthuthoigian='$new_tuanthuthoigian', diemtuanthuthoigian='$new_diemtuanthuthoigian', kienthuc='$new_kienthuc', diemkienthuc='$new_diemkienthuc', kynangnghe='$new_kynangnghe', diemkynangnghe='$new_diemkynangnghe', kinangdoclap='$new_kinangdoclap', diemkinangdoclap='$new_diemkinangdoclap', khanangnhom='$new_khanangnhom', diemkhanangnhom='$new_diemkhanangnhom', khananggiaiquyetcongviec='$new_khananggiaiquyetcongviec', diemkhananggiaiquyetcongviec='$new_diemkhananggiaiquyetcongviec', danhgiachung='$new_danhgiachung', ngaydanhgia='$new_ngaydanhgia' WHERE id=$id";
+        $query = "UPDATE danhgia SET hotensinhvien='$new_hotensinhvien', nhomnguoihuongdan='$new_nhomnguoihuongdan', ythuckyluat='$new_ythuckyluat', diemythucklyuat='$new_diemythuckyluat', tuanthuthoigian='$new_tuanthuthoigian', diemtuanthuthoigian='$new_diemtuanthuthoigian', kienthuc='$new_kienthuc', diemkienthuc='$new_diemkienthuc', kynangnghe='$new_kynangnghe', diemkynangnghe='$new_diemkynangnghe', kinangdoclap='$new_kinangdoclap', diemkinangdoclap='$new_diemkinangdoclap', khanangnhom='$new_khanangnhom', diemkhanangnhom='$new_diemkhanangnhom', khananggiaiquyetcongviec='$new_khananggiaiquyetcongviec', diemkhananggiaiquyetcongviec='$new_diemkhananggiaiquyetcongviec', danhgiachung='$new_danhgiachung', ngaydanhgia='$new_ngaydanhgia' WHERE id=$id";
 
         if ($mysqli->query($query)) {
             $notification = "Sửa đánh giá thành công.";
@@ -81,73 +94,101 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 }
+
+
+
+
 ?>
 
+
+
+
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quản lý Đánh giá</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
-
-        h2 {
-            color: #333;
-        }
-
-        form {
-            margin-bottom: 20px;
-        }
-
-        table {
-            border-collapse: collapse;
-            width: 100%;
-        }
-
-        table, th, td {
-            border: 1px solid #ddd;
-        }
-
-        th, td {
-            padding: 10px;
-            text-align: left;
-        }
-
-        th {
-            background-color: #f2f2f2;
-        }
-
-        button {
-            padding: 10px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        button:hover {
-            background-color: #45a049;
-        }
-
-        .notification {
-            color: white;
-            background-color: #4CAF50;
-            padding: 10px;
-            margin-bottom: 10px;
-            display: inline-block;
-        }
-    </style>
 </head>
+<style>
+
+    body {
+        background-color: #3498db; /* Màu nền xanh dương */
+        color: #ffffff; /* Màu chữ trắng */
+        font-family: Arial, sans-serif; /* Kiểu font chữ */
+        margin: 0;
+        padding: 0;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+    table, th, td {
+        border: 1px solid #ffffff; /* Màu đường biên trắng */
+    }
+
+    th, td {
+        padding: 10px;
+        text-align: left;
+    }
+
+    th {
+        background-color: #2072b3; /* Màu nền xanh dương đậm cho phần header */
+    }
+
+    tr:nth-child(even) {
+        background-color: #3498db; /* Màu nền xanh dương cho các hàng chẵn */
+    }
+
+    tr:nth-child(odd) {
+        background-color: #2072b3; /* Màu nền xanh dương đậm cho các hàng lẻ */
+    }
+
+    a {
+        color: #ffffff; /* Màu chữ trắng cho các liên kết */
+    }
+
+    a:hover {
+        color: #ffcc00; /* Màu chữ khi di chuột qua liên kết */
+    }
+
+    form {
+        margin-top: 20px;
+    }
+
+    h2 {
+        color: #ffffff; /* Màu chữ trắng cho tiêu đề h2 */
+    }
+
+    input[type="text"], select {
+        width: 10%;
+        padding: 8px;
+        margin: 5px 0;
+        box-sizing: border-box;
+    }
+
+    input[type="submit"] {
+        background-color: #2072b3; /* Màu nền xanh dương đậm cho nút submit */
+        color: #ffffff; /* Màu chữ trắng cho nút submit */
+        padding: 10px;
+        border: none;
+        cursor: pointer;
+    }
+
+    input[type="submit"]:hover {
+        background-color: #3498db; /* Màu nền xanh dương khi di chuột qua nút submit */
+    }
+
+</style>
 
 <body>
     <h2>Quản lý Đánh giá</h2>
 
+    <!-- Form Thêm Đánh giá -->
     <form method="POST">
         <label>Họ tên Sinh viên:</label>
         <input type="text" name="hotensinhvien" required>
@@ -260,161 +301,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
     <!-- Bảng Danh sách Đánh giá -->
-    <?php
-$mysqli = new mysqli('localhost', 'root', '', 'quanlysvtt');
-
-if ($mysqli->connect_error) {
-    die('Connect Error (' . $mysqli->connect_errno . ') ' . $mysqli->connect_error);
-}
-
-$notification = "";
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (isset($_POST['add'])) {
-        // Lấy dữ liệu từ form và kiểm tra
-        $hotensinhvien = $_POST['hotensinhvien'];
-        $nhomnguoihuongdan = $_POST['nhomnguoihuongdan'];
-        $ythuckyluat = $_POST['ythuckyluat'];
-        $diemythuckyluat = $_POST['diemythuckyluat'];
-        $tuanthuthoigian = $_POST['tuanthuthoigian'];
-        $diemtuanthuthoigian = $_POST['diemtuanthuthoigian'];
-        $kienthuc = $_POST['kienthuc'];
-        $diemkienthuc = $_POST['diemkienthuc'];
-        $kynangnghe = $_POST['kynangnghe'];
-        $diemkynangnghe = $_POST['diemkynangnghe'];
-        $kinangdoclap = $_POST['kinangdoclap'];
-        $diemkinangdoclap = $_POST['diemkinangdoclap'];
-        $khanangnhom = $_POST['khanangnhom'];
-        $diemkhanangnhom = $_POST['diemkhanangnhom'];
-        $khananggiaiquyetcongviec = $_POST['khananggiaiquyetcongviec'];
-        $diemkhananggiaiquyetcongviec = $_POST['diemkhananggiaiquyetcongviec'];
-        $danhgiachung = ($_POST['diemythuckyluat'] + $_POST['diemtuanthuthoigian'] + $_POST['diemkienthuc'] + $_POST['diemkynangnghe'] + $_POST['diemkinangdoclap'] + $_POST['diemkhanangnhom'] + $_POST['diemkhananggiaiquyetcongviec']) / 7;
-        $ngaydanhgia = $_POST['ngaydanhgia'];
-
-        // Chuẩn bị câu truy vấn SQL
-        $query = "INSERT INTO danhgia (hotensinhvien, nhomnguoihuongdan, ythuckyluat, diemythuckyluat, tuanthuthoigian, diemtuanthuthoigian, kienthuc, diemkienthuc, kynangnghe, diemkynangnghe, kinangdoclap, diemkinangdoclap, khanangnhom, diemkhanangnhom, khananggiaiquyetcongviec, diemkhananggiaiquyetcongviec, danhgiachung, ngaydanhgia) VALUES ('$hotensinhvien', '$nhomnguoihuongdan', '$ythuckyluat', '$diemythuckyluat', '$tuanthuthoigian', '$diemtuanthuthoigian', '$kienthuc', '$diemkienthuc', '$kynangnghe', '$diemkynangnghe', '$kinangdoclap', '$diemkinangdoclap', '$khanangnhom', '$diemkhanangnhom', '$khananggiaiquyetcongviec', '$diemkhananggiaiquyetcongviec', '$danhgiachung', '$ngaydanhgia')";
-
-        // Thực hiện câu truy vấn và kiểm tra kết quả
-        if ($mysqli->query($query)) {
-            $notification = "Thêm đánh giá thành công.";
-        } else {
-            $notification = "Thêm đánh giá thất bại: " . $mysqli->error;
-        }
-    } elseif (isset($_POST['delete'])) {
-        // Xóa đánh giá
-        $id = $_POST['delete_id'];
-        if ($mysqli->query("DELETE FROM danhgia WHERE id=$id")) {
-            $notification = "Xóa đánh giá thành công.";
-        } else {
-            $notification = "Xóa đánh giá thất bại: " . $mysqli->error;
-        }
-    } elseif (isset($_POST['edit'])) {
-        // Sửa đánh giá
-        $id = $_POST['edit_id'];
-        $result = $mysqli->query("SELECT * FROM danhgia WHERE id=$id");
-
-        if (!$result) {
-            die('Error retrieving data for editing: ' . $mysqli->error);
-        }
-
-        $row_to_edit = $result->fetch_assoc();
-
-        // Lấy dữ liệu từ form và kiểm tra
-        $new_hotensinhvien = $_POST['new_hotensinhvien'];
-        $new_nhomnguoihuongdan = $_POST['new_nhomnguoihuongdan'];
-        $new_ythuckyluat = $_POST['new_ythuckyluat'];
-        $new_diemythuckyluat = $_POST['new_diemythuckyluat'];
-        $new_tuanthuthoigian = $_POST['new_tuanthuthoigian'];
-        $new_diemtuanthuthoigian = $_POST['new_diemtuanthuthoigian'];
-        $new_kienthuc = $_POST['new_kienthuc'];
-        $new_diemkienthuc = $_POST['new_diemkienthuc'];
-        $new_kynangnghe = $_POST['new_kynangnghe'];
-        $new_diemkynangnghe = $_POST['new_diemkynangnghe'];
-        $new_kinangdoclap = $_POST['new_kinangdoclap'];
-        $new_diemkinangdoclap = $_POST['new_diemkinangdoclap'];
-        $new_khanangnhom = $_POST['new_khanangnhom'];
-        $new_diemkhanangnhom = $_POST['new_diemkhanangnhom'];
-        $new_khananggiaiquyetcongviec = $_POST['new_khananggiaiquyetcongviec'];
-        $new_diemkhananggiaiquyetcongviec = $_POST['new_diemkhananggiaiquyetcongviec'];
-        $new_danhgiachung = ($new_diemythuckyluat + $new_diemtuanthuthoigian + $new_diemkienthuc + $new_diemkynangnghe + $new_diemkinangdoclap + $new_diemkhanangnhom + $new_diemkhananggiaiquyetcongviec) / 7;
-        $new_ngaydanhgia = $_POST['new_ngaydanhgia'];
-
-        // Chuẩn bị câu truy vấn SQL
-        $query = "UPDATE danhgia SET hotensinhvien='$new_hotensinhvien', nhomnguoihuongdan='$new_nhomnguoihuongdan', ythuckyluat='$new_ythuckyluat', diemythuckyluat='$new_diemythuckyluat', tuanthuthoigian='$new_tuanthuthoigian', diemtuanthuthoigian='$new_diemtuanthuthoigian', kienthuc='$new_kienthuc', diemkienthuc='$new_diemkienthuc', kynangnghe='$new_kynangnghe', diemkynangnghe='$new_diemkynangnghe', kinangdoclap='$new_kinangdoclap', diemkinangdoclap='$new_diemkinangdoclap', khanangnhom='$new_khanangnhom', diemkhanangnhom='$new_diemkhanangnhom', khananggiaiquyetcongviec='$new_khananggiaiquyetcongviec', diemkhananggiaiquyetcongviec='$new_diemkhananggiaiquyetcongviec', danhgiachung='$new_danhgiachung', ngaydanhgia='$new_ngaydanhgia' WHERE id=$id";
-
-        // Thực hiện câu truy vấn và kiểm tra kết quả
-        if ($mysqli->query($query)) {
-            $notification = "Sửa đánh giá thành công.";
-        } else {
-            $notification = "Sửa đánh giá thất bại: " . $mysqli->error;
-        }
-    }
-}
-?>
-
-<!DOCTYPE html>
-<html lang="vi">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quản lý Đánh giá</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
-
-        h2 {
-            color: #333;
-        }
-
-        form {
-            margin-bottom: 20px;
-        }
-
-        table {
-            border-collapse: collapse;
-            width: 100%;
-        }
-
-        table, th, td {
-            border: 1px solid #ddd;
-        }
-
-        th, td {
-            padding: 10px;
-            text-align: left;
-        }
-
-        th {
-            background-color: #f2f2f2;
-        }
-
-        button {
-            padding: 10px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        button:hover {
-            background-color: #45a049;
-        }
-
-        .notification {
-            color: white;
-            background-color: #4CAF50;
-            padding: 10px;
-            margin-bottom: 10px;
-            display: inline-block;
-        }
-    </style>
-</head>
-
-<body>
     <h3>Danh sách Đánh giá</h3>
     <table border="1">
         <tr>
