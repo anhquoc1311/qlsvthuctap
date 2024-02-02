@@ -97,18 +97,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <input type="text" name="detai" required>
         <br>
         <label>Họ Tên Sinh Viên:</label>
-<select id="selectSinhVien" class="select2" name="hotensinhvien" required>
-    <!-- Options will be dynamically loaded -->
-</select>
-
-<script>
-    // Kích hoạt Select2 cho trường input với ID là "selectSinhVien"
-    $(document).ready(function() {
-        $('#selectSinhVien').select2({
-            // Cấu hình Select2 nếu cần thiết
-        });
-    });
-</script>
+        <input type="text" name="hotensinhvien" required>
 
         <br>
         <label>Ngày Bắt Đầu:</label>

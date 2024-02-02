@@ -1,6 +1,6 @@
 <?php
 $mysqli = new mysqli('localhost', 'root', '', 'quanlysvtt');
- include('fpdf.php');
+
 if ($mysqli->connect_error) {
     die("Kết nối thất bại: " . $mysqli->connect_error);
 }
@@ -23,9 +23,9 @@ if (isset($_POST['add'])) {
 
     $insert_query = "INSERT INTO nhomnguoihd (tennguoihuongdan, tennhomthuctap, kithuctap, tendetai, thoigianbatdau, thoigianketthuc) 
                      VALUES ('$tennguoihuongdan', '$tennhomthuctap', '$kithuctap', '$tendetai', '$thoigianbatdau', '$thoigianketthuc')";
-    
+
     $result = $mysqli->query($insert_query);
-    
+
     if ($result) {
         echo "Bản ghi được thêm thành công!";
     } else {
@@ -36,11 +36,11 @@ if (isset($_POST['add'])) {
 // Xóa bản ghi
 if (isset($_POST['delete'])) {
     $id_to_delete = $_POST['id_to_delete'];
-    
+
     $delete_query = "DELETE FROM nhomnguoihd WHERE id_nhomnguoihd = $id_to_delete";
-    
+
     $result = $mysqli->query($delete_query);
-    
+
     if ($result) {
         echo "Bản ghi đã được xóa thành công!";
     } else {
@@ -62,9 +62,9 @@ if (isset($_POST['update'])) {
                      SET tennguoihuongdan='$tennguoihuongdan', tennhomthuctap='$tennhomthuctap', kithuctap='$kithuctap', tendetai='$tendetai', 
                          thoigianbatdau='$thoigianbatdau', thoigianketthuc='$thoigianketthuc' 
                      WHERE id_nhomnguoihd = $id_to_update";
-    
+
     $result = $mysqli->query($update_query);
-    
+
     if ($result) {
         echo "Bản ghi đã được cập nhật thành công!";
     } else {
@@ -72,39 +72,6 @@ if (isset($_POST['update'])) {
     }
 }
 
-if (isset($_POST['export_pdf'])) {
-    $pdf = new FPDF();
-    $pdf->AddPage();
-    $pdf->SetFont('Arial', 'B', 12);
-
-    $select_query = "SELECT * FROM nhomnguoihd WHERE id_nhomnguoihd >= 0 AND id_nhomnguoihd <= 999";
-    $result = $mysqli->query($select_query);
-
-    if ($result->num_rows > 0) {
-        $pdf->Cell(10, 7, 'ID', 1);
-        $pdf->Cell(40, 7, 'Tên Người Hướng Dẫn', 1);
-        $pdf->Cell(40, 7, 'Tên Nhóm Thực Tập', 1);
-        $pdf->Cell(20, 7, 'Kì Thực Tập', 1);
-        $pdf->Cell(40, 7, 'Tên Đề Tài', 1);
-        $pdf->Cell(30, 7, 'Thời Gian Bắt Đầu', 1);
-        $pdf->Cell(30, 7, 'Thời Gian Kết Thúc', 1);
-        $pdf->Ln();
-
-        while ($row = $result->fetch_assoc()) {
-            $pdf->Cell(10, 7, $row['id_nhomnguoihd'], 1);
-            $pdf->Cell(40, 7, $row['tennguoihuongdan'], 1);
-            $pdf->Cell(40, 7, $row['tennhomthuctap'], 1);
-            $pdf->Cell(20, 7, $row['kithuctap'], 1);
-            $pdf->Cell(40, 7, $row['tendetai'], 1);
-            $pdf->Cell(30, 7, $row['thoigianbatdau'], 1);
-            $pdf->Cell(30, 7, $row['thoigianketthuc'], 1);
-            $pdf->Ln();
-        }
-
-        $pdf->Output('export.pdf', 'D'); // Download the PDF file
-        exit;
-    }
-}
 ?>
 
 <!DOCTYPE html>
@@ -115,10 +82,8 @@ if (isset($_POST['export_pdf'])) {
     <title>Quản lý Nhóm HD</title>
 </head>
 <body>
-<form method="post" action="nhomhd.php">
-    <input type="submit" name="export_pdf" value="Xuất PDF">
-</form>
-<h1>form nhóm người hướng dẫn phần xuất file bdf đóng lại hoặc làm thành form khác mà không có nó tại này tui làm mẫu xuất file</h1>
+
+
 <h2>Thêm Bản Ghi</h2>
 <form method="post" action="nhomhd.php">
     <label>Tên Người Hướng Dẫn:</label>
