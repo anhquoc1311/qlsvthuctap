@@ -79,7 +79,7 @@
 <body>
 
 <form action="xulydanhgia.php" method="post">
-    <label for="hoten">Họ và Tên:</label>
+    <label for="hoten">Họ và Tên Người hướng dẫn:</label>
     <input type="text" id="hoten" name="hoten" required><br>
 
     <label for="mucdo">Mức Độ Hài Lòng:</label>
@@ -102,3 +102,4 @@
 
 </body>
 </html>
+<p><a href="index.php">Quay lại trang chủ!</a></p>

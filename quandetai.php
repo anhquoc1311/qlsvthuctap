@@ -181,6 +181,6 @@ if ($resultList->num_rows > 0) {
 
 $mysqli->close();
 ?>
-
+<p><a href="index.php">Quay lại trang chủ!</a></p>
 </body>
 </html>

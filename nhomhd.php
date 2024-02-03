@@ -12,6 +12,61 @@ if (!function_exists('sanitize')) {
     }
 }
 
+// Function to get options from kythuctap table
+function getKythuctapOptions()
+{
+    global $mysqli;
+    $options = array();
+
+    $query = "SELECT * FROM kythuctap";
+    $result = $mysqli->query($query);
+
+    if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            $options[$row['tenkythuctap']] = $row['tenkythuctap']; // Sửa ở đây để trả về tên thực tập
+        }
+    }
+
+    return $options;
+}
+
+// Function to get options from nhomtt table
+function getNhomttOptions()
+{
+    global $mysqli;
+    $options = array();
+
+    $query = "SELECT * FROM nhomtt";
+    $result = $mysqli->query($query);
+
+    if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            $options[$row['tennhom']] = $row['tennhom']; // Sửa ở đây để trả về tên nhóm
+        }
+    }
+
+    return $options;
+}
+
+// Function to get options from tendetai table
+function getTendetaiOptions()
+{
+    global $mysqli;
+    $options = array();
+
+    $query = "SELECT * FROM tendetai";
+    $result = $mysqli->query($query);
+
+    if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            $options[$row['tendetai']] = $row['tendetai'];
+        }
+    }
+
+    return $options;
+}
+
+
 // Thêm bản ghi
 if (isset($_POST['add'])) {
     $tennguoihuongdan = sanitize($_POST['tennguoihuongdan']);
@@ -71,7 +126,6 @@ if (isset($_POST['update'])) {
         echo "Lỗi: " . $mysqli->error;
     }
 }
-
 ?>
 
 <!DOCTYPE html>
@@ -151,9 +205,20 @@ if (isset($_POST['update'])) {
         background-color: #3498db; /* Màu nền xanh dương khi di chuột qua nút submit */
     }
 </style>
+    <!-- Include jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Include Select2 CSS and JS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-beta.1/css/select2.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-beta.1/js/select2.min.js"></script>
+
+    <!-- Initialize Select2 for the "kithuctap", "tennhomthuctap", and "tendetai" dropdowns -->
+    <script>
+        $(document).ready(function () {
+            $('.select2').select2();
+        });
+    </script>
 </head>
 <body>
-
 
 <h2>Thêm Bản Ghi</h2>
 <form method="post" action="nhomhd.php">
@@ -161,13 +226,34 @@ if (isset($_POST['update'])) {
     <input type="text" name="tennguoihuongdan" required><br>
 
     <label>Tên Nhóm Thực Tập:</label>
-    <input type="text" name="tennhomthuctap" required><br>
+    <select name="tennhomthuctap" class="select2" required>
+        <?php
+        $nhomttOptions = getNhomttOptions();
+        foreach ($nhomttOptions as $id => $tennhom) {
+            echo "<option value=\"$id\">$tennhom</option>";
+        }
+        ?>
+    </select><br>
 
     <label>Kì Thực Tập:</label>
-    <input type="text" name="kithuctap" required><br>
+    <select name="kithuctap" class="select2" required>
+        <?php
+        $kythuctapOptions = getKythuctapOptions();
+        foreach ($kythuctapOptions as $id => $tenkythuctap) {
+            echo "<option value=\"$id\">$tenkythuctap</option>";
+        }
+        ?>
+    </select><br>
 
     <label>Tên Đề Tài:</label>
-    <input type="text" name="tendetai" required><br>
+    <select name="tendetai" class="select2" required>
+        <?php
+        $tendetaiOptions = getTendetaiOptions();
+        foreach ($tendetaiOptions as $tendetai) {
+            echo "<option value=\"$tendetai\">$tendetai</option>";
+        }
+        ?>
+    </select><br>
 
     <label>Thời Gian Bắt Đầu:</label>
     <input type="datetime-local" name="thoigianbatdau" required><br>
@@ -204,13 +290,32 @@ if (isset($_GET['id_to_update'])) {
             <input type="text" name="tennguoihuongdan" value="<?php echo $row['tennguoihuongdan']; ?>" required><br>
 
             <label>Tên Nhóm Thực Tập:</label>
-            <input type="text" name="tennhomthuctap" value="<?php echo $row['tennhomthuctap']; ?>" required><br>
+            <select name="tennhomthuctap" class="select2" required>
+                <?php
+                foreach ($nhomttOptions as $id => $tennhom) {
+                    $selected = ($id == $row['tennhomthuctap']) ? 'selected' : '';
+                    echo "<option value=\"$id\" $selected>$tennhom</option>";
+                }
+                ?>
+            <label for="tennhomthuctap">Nhóm thực tập:</label>
+<select name="tennhomthuctap" class="select2" required>
+    <?php
+    $nhomttOptions = getNhomttOptions();
+    foreach ($nhomttOptions as $tennhom) {
+        echo "<option value=\"$tennhom\">$tennhom</option>";
+    }
+    ?>
+</select><br>
 
-            <label>Kì Thực Tập:</label>
-            <input type="text" name="kithuctap" value="<?php echo $row['kithuctap']; ?>" required><br>
-
-            <label>Tên Đề Tài:</label>
-            <input type="text" name="tendetai" value="<?php echo $row['tendetai']; ?>" required><br>
+<label for="kithuctap">Kỳ thực tập:</label>
+<select name="kithuctap" class="select2" required>
+    <?php
+    $kythuctapOptions = getKythuctapOptions();
+    foreach ($kythuctapOptions as $tenkythuctap) {
+        echo "<option value=\"$tenkythuctap\">$tenkythuctap</option>";
+    }
+    ?>
+</select><br>
 
             <label>Thời Gian Bắt Đầu:</label>
             <input type="datetime-local" name="thoigianbatdau" value="<?php echo $row['thoigianbatdau']; ?>" required><br>
@@ -245,6 +350,19 @@ if ($result->num_rows > 0) {
         echo "<td>" . $row['thoigianketthuc'] . "</td>";
         echo "<td><a href='nhomhd.php?id_to_update=" . $row['id_nhomnguoihd'] . "'>Sửa</a></td>";
         echo "</tr>";
+
+        // Additional row for detailed information
+        echo "<tr style='display:none;'>";
+        echo "<td colspan='7'>";
+        echo "<strong>Thông Tin Chi Tiết:</strong><br>";
+        echo "<strong>Tên Người Hướng Dẫn:</strong> " . $row['tennguoihuongdan'] . "<br>";
+        echo "<strong>Tên Nhóm Thực Tập:</strong> " . $row['tennhomthuctap'] . "<br>";
+        echo "<strong>Kì Thực Tập:</strong> " . $row['kithuctap'] . "<br>";
+        echo "<strong>Tên Đề Tài:</strong> " . $row['tendetai'] . "<br>";
+        echo "<strong>Thời Gian Bắt Đầu:</strong> " . $row['thoigianbatdau'] . "<br>";
+        echo "<strong>Thời Gian Kết Thúc:</strong> " . $row['thoigianketthuc'] . "<br>";
+        echo "</td>";
+        echo "</tr>";
     }
 
     echo "</table>";
@@ -256,3 +374,4 @@ $mysqli->close();
 ?>
 </body>
 </html>
+<p><a href="index.php">Quay lại trang chủ!</a></p>

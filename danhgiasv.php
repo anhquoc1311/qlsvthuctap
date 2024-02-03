@@ -398,3 +398,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </body>
 </html>
 
+<p><a href="index.php">Quay lại trang chủ!</a></p>

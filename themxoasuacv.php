@@ -13,9 +13,10 @@ if (isset($_POST['submit_add'])) {
     $ngaybatdau = $_POST['ngaybatdau'];
     $ngayketthuc = $_POST['ngayketthuc'];
     $nhanxet = $_POST['nhanxet'];
+    $tennhomtt = $_POST['tennhomtt'];
 
-    $insertQuery = "INSERT INTO congviec (tencongviec, tendetai, tennhomnguoihuongdan, ngaybatdau, ngayketthuc, nhanxet) 
-                    VALUES ('$tencongviec', '$tendetai', '$tennhomnguoihuongdan', '$ngaybatdau', '$ngayketthuc', '$nhanxet')";
+    $insertQuery = "INSERT INTO congviec (tencongviec, tendetai, tennhomnguoihuongdan, ngaybatdau, ngayketthuc, nhanxet, tennhomtt) 
+                    VALUES ('$tencongviec', '$tendetai', '$tennhomnguoihuongdan', '$ngaybatdau', '$ngayketthuc', '$nhanxet', '$tennhomtt')";
 
     if ($mysqli->query($insertQuery) === TRUE) {
         echo 'Thêm công việc thành công';
@@ -41,8 +42,9 @@ if (isset($_GET['delete_id'])) {
 if (isset($_GET['edit_id'])) {
     $edit_id = $_GET['edit_id'];
 
-    $selectEditQuery = "SELECT c.*, d.tendetai FROM congviec c
+    $selectEditQuery = "SELECT c.*, d.tendetai, n.tennhom AS tennhomtt FROM congviec c
                         JOIN tendetai d ON c.tendetai = d.tendetai
+                        LEFT JOIN nhomtt n ON c.tennhomtt = n.tennhom
                         WHERE c.id_cv = $edit_id";
     $editResult = $mysqli->query($selectEditQuery);
     $editData = $editResult->fetch_assoc();
@@ -57,10 +59,11 @@ if (isset($_POST['submit_update'])) {
     $ngaybatdau = $_POST['ngaybatdau'];
     $ngayketthuc = $_POST['ngayketthuc'];
     $nhanxet = $_POST['nhanxet'];
+    $tennhomtt = $_POST['tennhomtt'];
 
     $updateQuery = "UPDATE congviec 
                     SET tencongviec = '$tencongviec', tendetai = '$tendetai', tennhomnguoihuongdan = '$tennhomnguoihuongdan',
-                        ngaybatdau = '$ngaybatdau', ngayketthuc = '$ngayketthuc', nhanxet = '$nhanxet' 
+                        ngaybatdau = '$ngaybatdau', ngayketthuc = '$ngayketthuc', nhanxet = '$nhanxet', tennhomtt = '$tennhomtt'
                     WHERE id_cv = $edit_id";
 
     if ($mysqli->query($updateQuery) === TRUE) {
@@ -71,13 +74,15 @@ if (isset($_POST['submit_update'])) {
 }
 
 // Display danh sách công việc
-$selectQuery = "SELECT c.*, d.tendetai FROM congviec c
-                JOIN tendetai d ON c.tendetai = d.tendetai";
+$selectQuery = "SELECT c.*, d.tendetai, n.tennhom AS tennhomtt FROM congviec c
+                JOIN tendetai d ON c.tendetai = d.tendetai
+                LEFT JOIN nhomtt n ON c.tennhomtt = n.tennhom";
 $result = $mysqli->query($selectQuery);
 
 // Fetch tên đề tài for dropdown
 $detaiQuery = "SELECT * FROM tendetai";
 $detaiResult = $mysqli->query($detaiQuery);
+
 ?>
 
 <!DOCTYPE html>
@@ -138,7 +143,7 @@ $detaiResult = $mysqli->query($detaiQuery);
         color: #ffffff; /* Màu chữ trắng cho tiêu đề h2 */
     }
 
-    input[type="text"], select {
+    input[type="text"], input[type="password"], input[type="email"], select {
         width: 10%;
         padding: 8px;
         margin: 5px 0;
@@ -156,7 +161,20 @@ $detaiResult = $mysqli->query($detaiQuery);
     input[type="submit"]:hover {
         background-color: #3498db; /* Màu nền xanh dương khi di chuột qua nút submit */
     }
-</style>
+    
+    </style>
+    <!-- Include jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Include Select2 CSS and JS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-beta.1/css/select2.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-beta.1/js/select2.min.js"></script>
+
+    <!-- Initialize Select2 for the "tennhomtt" dropdown -->
+    <script>
+        $(document).ready(function () {
+            $('.select2').select2();
+        });
+    </script>
 </head>
 <body>
 
@@ -168,6 +186,7 @@ $detaiResult = $mysqli->query($detaiQuery);
         <th>Tên công việc</th>
         <th>Tên đề tài</th>
         <th>Tên nhóm người hướng dẫn</th>
+        <th>Tên nhóm thực tập</th>
         <th>Ngày bắt đầu</th>
         <th>Ngày kết thúc</th>
         <th>Nhận xét</th>
@@ -179,11 +198,13 @@ $detaiResult = $mysqli->query($detaiQuery);
             <td><?php echo $row['tencongviec']; ?></td>
             <td><?php echo $row['tendetai']; ?></td>
             <td><?php echo $row['tennhomnguoihuongdan']; ?></td>
+            <td><?php echo ($row['tennhomtt']) ? $row['tennhomtt'] : "N/A"; ?></td>
             <td><?php echo $row['ngaybatdau']; ?></td>
             <td><?php echo $row['ngayketthuc']; ?></td>
             <td><?php echo $row['nhanxet']; ?></td>
             <td>
-                <a href="themxoasuacv.php?delete_id=<?php echo $row['id_cv']; ?>" onclick="return confirm('Bạn chắc chắn muốn xóa?')">Xóa</a>
+                <a href="themxoasuacv.php?delete_id=<?php echo $row['id_cv']; ?>"
+                   onclick="return confirm('Bạn chắc chắn muốn xóa?')">Xóa</a>
                 <a href="themxoasuacv.php?edit_id=<?php echo $row['id_cv']; ?>">Sửa</a>
             </td>
         </tr>
@@ -220,6 +241,18 @@ $detaiResult = $mysqli->query($detaiQuery);
         <label for="nhanxet">Nhận xét:</label>
         <input type="text" name="nhanxet" value="<?php echo $editData['nhanxet']; ?>" required><br>
 
+        <label for="tennhomtt">Tên nhóm thực tập:</label>
+        <select class="select2" name="tennhomtt">
+            <?php
+            $nhomttQuery = "SELECT DISTINCT tennhom FROM nhomtt";
+            $nhomttResult = $mysqli->query($nhomttQuery);
+
+            while ($nhomttRow = $nhomttResult->fetch_assoc()) {
+                echo "<option value='" . $nhomttRow['tennhom'] . "' " . ($nhomttRow['tennhom'] == $editData['tennhomtt'] ? 'selected' : '') . ">" . $nhomttRow['tennhom'] . "</option>";
+            }
+            ?>
+        </select><br>
+
         <input type="submit" name="submit_update" value="Cập nhật công việc">
     </form>
 <?php endif; ?>
@@ -252,6 +285,18 @@ $detaiResult = $mysqli->query($detaiQuery);
     <label for="nhanxet">Nhận xét:</label>
     <input type="text" name="nhanxet" required><br>
 
+    <label for="tennhomtt">Tên nhóm thực tập:</label>
+    <select class="select2" name="tennhomtt">
+        <?php
+        $nhomttQuery = "SELECT DISTINCT tennhom FROM nhomtt";
+        $nhomttResult = $mysqli->query($nhomttQuery);
+
+        while ($nhomttRow = $nhomttResult->fetch_assoc()) {
+            echo "<option value='" . $nhomttRow['tennhom'] . "'>" . $nhomttRow['tennhom'] . "</option>";
+        }
+        ?>
+    </select><br>
+
     <input type="submit" name="submit_add" value="Thêm công việc">
 </form>
 
@@ -262,3 +307,4 @@ $detaiResult = $mysqli->query($detaiQuery);
 // Đóng kết nối
 $mysqli->close();
 ?>
+<p><a href="index.php">Quay lại trang chủ!</a></p>

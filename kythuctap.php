@@ -218,6 +218,11 @@ $kythuctapResult = $mysqli->query($kythuctapQuery);
     input[type="submit"]:hover {
         background-color: #3498db; /* Màu nền xanh dương khi di chuột qua nút submit */
     }
+    .notification {
+        color: #ff0000; /* Red color for notification */
+        font-weight: bold;
+        margin-top: 10px; /* Adjust the margin as needed */
+    }
 </style>
 </head>
 <body>
@@ -294,7 +299,8 @@ $kythuctapResult = $mysqli->query($kythuctapQuery);
     }
     ?>
 </table>
-
+<p><?php echo $notification; ?></p>
+<p><a href="index.php">Quay lại trang chủ!</a></p>
 
 </body>
 </html>

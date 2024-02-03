@@ -7,10 +7,18 @@ if ($mysqli->connect_error) {
 
 $notification = "";
 
+// Fetch data for the "tendetai" field
+$tendetaiArray = array();
+$resultTendetai = $mysqli->query("SELECT tendetai FROM tendetai");
+
+while ($rowTendetai = $resultTendetai->fetch_assoc()) {
+    $tendetaiArray[] = $rowTendetai['tendetai'];
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['add'])) {
         $tennhom = $_POST['tennhom'];
-        $detai = $_POST['detai'];
+        $detai = $_POST['detai']; // Make sure to use the correct variable name
         $hotensinhvien = $_POST['hotensinhvien'];
         $ngaybd = $_POST['ngaybd'];
         $ngaykt = $_POST['ngaykt'];
@@ -161,8 +169,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <label>Tên Nhóm:</label>
         <input type="text" name="tennhom" required>
         <br>
+      
         <label>Đề Tài:</label>
-        <input type="text" name="detai" required>
+<select id="selectDetai" name="detai" required></select>
+
         <br>
         <label>Họ Tên Sinh Viên:</label>
         <input type="text" name="hotensinhvien" required>
@@ -177,54 +187,59 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <button type="submit" name="add">Thêm</button>
     </form>
 
-    <?php if (!empty($notification)): ?>
-        <div style="color: #ff0000;"><?php echo $notification; ?></div>
-    <?php endif; ?>
+  
 
     <!-- Bảng Danh sách Nhóm -->
-    <h3>Danh sách Nhóm</h3>
-    <table border="1">
-        <tr>
-            <th>ID</th>
-            <th>Tên Nhóm</th>
-            <th>Đề Tài</th>
-            <th>Họ Tên Sinh Viên</th>
-            <th>Ngày Bắt Đầu</th>
-            <th>Ngày Kết Thúc</th>
-            <th>Thao tác</th>
-        </tr>
+    <?php if (!empty($notification)): ?>
+    <div style="color: #ff0000;"><?php echo $notification; ?></div>
+<?php endif; ?>
 
-        <?php
-        $result = $mysqli->query("SELECT * FROM nhomtt");
+<!-- Bảng Danh sách Nhóm -->
+<h3>Danh sách Nhóm</h3>
+<table border="1">
+    <tr>
+        <th>ID</th>
+        <th>Tên Nhóm</th>
+        <th>Đề Tài</th>
+        <th>Họ Tên Sinh Viên</th>
+        <th>Ngày Bắt Đầu</th>
+        <th>Ngày Kết Thúc</th>
+        <th>Thao tác</th>
+    </tr>
 
-        while ($row = $result->fetch_assoc()) {
-            echo "<tr>";
-            echo "<td>{$row['id']}</td>";
-            echo "<td>{$row['tennhom']}</td>";
-            echo "<td>{$row['detai']}</td>";
-            echo "<td>{$row['hotensinhvien']}</td>";
-            echo "<td>{$row['ngaybd']}</td>";
-            echo "<td>{$row['ngaykt']}</td>";
-            echo "<td class='actions'>
-                    <form method='POST'>
-                        <input type='hidden' name='delete_id' value='{$row['id']}'>
-                        <button type='submit' name='delete'>Xóa</button>
-                    </form>
-                    <form method='POST'>
-                        <input type='hidden' name='edit_id' value='{$row['id']}'>
-                        <input type='text' name='new_tennhom' placeholder='Tên Nhóm mới'>
-                        <input type='text' name='new_detai' placeholder='Đề Tài mới'>
-                        <input type='text' name='new_hotensinhvien' placeholder='Họ Tên Sinh Viên mới'>
-                        <input type='date' name='new_ngaybd' placeholder='Ngày Bắt Đầu mới'>
-                        <input type='date' name='new_ngaykt' placeholder='Ngày Kết Thúc mới'>
-                        <button type='submit' name='edit'>Sửa</button>
-                    </form>
-                </td>";
-            echo "</tr>";
-        }
-        ?>
-    </table>
     <?php
+    $result = $mysqli->query("SELECT * FROM nhomtt");
+
+    while ($row = $result->fetch_assoc()) {
+        echo "<tr>";
+        echo "<td>{$row['id']}</td>";
+        echo "<td>{$row['tennhom']}</td>";
+        echo "<td>{$row['detai']}</td>";
+        echo "<td>{$row['hotensinhvien']}</td>";
+        echo "<td>{$row['ngaybd']}</td>";
+        echo "<td>{$row['ngaykt']}</td>";
+        echo "<td class='actions'>
+                <form method='POST'>
+                    <input type='hidden' name='delete_id' value='{$row['id']}'>
+                    <button type='submit' name='delete'>Xóa</button>
+                </form>
+                <form method='POST'>
+                    <input type='hidden' name='edit_id' value='{$row['id']}'>
+                    <input type='text' name='new_tennhom' placeholder='Tên Nhóm mới'>
+                    <input type='text' name='new_detai' placeholder='Đề Tài mới'>
+                    <input type='text' name='new_hotensinhvien' placeholder='Họ Tên Sinh Viên mới'>
+                    <input type='date' name='new_ngaybd' placeholder='Ngày Bắt Đầu mới'>
+                    <input type='date' name='new_ngaykt' placeholder='Ngày Kết Thúc mới'>
+                    <button type='submit' name='edit'>Sửa</button>
+                </form>
+            </td>";
+        echo "</tr>";
+    }
+    ?>
+
+</table>
+
+<?php
 $resultSinhVien = $mysqli->query("SELECT hotensinhvien FROM sinhvien");
 $sinhVienArray = array();
 
@@ -242,9 +257,18 @@ while ($rowSinhVien = $resultSinhVien->fetch_assoc()) {
     });
 </script>
 
+<script>
+    // Đưa danh sách tên đề tài vào Select2 và cho phép chọn nhiều giá trị
+    var tendetaiData = <?php echo json_encode($tendetaiArray); ?>;
+    $('#selectDetai').select2({
+        data: tendetaiData,
+        multiple: true
+    });
+</script>
 
-    <?php
-    $mysqli->close();
-    ?>
+<?php
+$mysqli->close();
+?>
+<p><a href="index.php">Quay lại trang chủ!</a></p>
 </body>
 </html>

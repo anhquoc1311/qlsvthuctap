@@ -78,6 +78,7 @@ $result = $mysqli->query($selectQuery);
 // Fetch tên đề tài for dropdown
 $detaiQuery = "SELECT * FROM tendetai";
 $detaiResult = $mysqli->query($detaiQuery);
+
 ?>
 
 <!DOCTYPE html>
@@ -86,6 +87,18 @@ $detaiResult = $mysqli->query($detaiQuery);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quản lý công việc</title>
+    <!-- Include jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Include Select2 CSS and JS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-beta.1/css/select2.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-beta.1/js/select2.min.js"></script>
+
+    <!-- Initialize Select2 for the "tennhomtt" dropdown -->
+    <script>
+        $(document).ready(function () {
+            $('.select2').select2();
+        });
+    </script>
 </head>
 <body>
 
@@ -112,7 +125,8 @@ $detaiResult = $mysqli->query($detaiQuery);
             <td><?php echo $row['ngayketthuc']; ?></td>
             <td><?php echo $row['nhanxet']; ?></td>
             <td>
-                <a href="themxoasuacv.php?delete_id=<?php echo $row['id_cv']; ?>" onclick="return confirm('Bạn chắc chắn muốn xóa?')">Xóa</a>
+                <a href="themxoasuacv.php?delete_id=<?php echo $row['id_cv']; ?>"
+                   onclick="return confirm('Bạn chắc chắn muốn xóa?')">Xóa</a>
                 <a href="themxoasuacv.php?edit_id=<?php echo $row['id_cv']; ?>">Sửa</a>
             </td>
         </tr>
@@ -149,6 +163,18 @@ $detaiResult = $mysqli->query($detaiQuery);
         <label for="nhanxet">Nhận xét:</label>
         <input type="text" name="nhanxet" value="<?php echo $editData['nhanxet']; ?>" required><br>
 
+        <label for="tennhomtt">Tên nhóm thực tập:</label>
+        <select class="select2" name="tennhomtt">
+            <?php
+            $nhomttQuery = "SELECT DISTINCT tennhom FROM nhomtt";
+            $nhomttResult = $mysqli->query($nhomttQuery);
+
+            while ($nhomttRow = $nhomttResult->fetch_assoc()) {
+                echo "<option value='" . $nhomttRow['tennhom'] . "' " . ($nhomttRow['tennhom'] == $editData['tennhomtt'] ? 'selected' : '') . ">" . $nhomttRow['tennhom'] . "</option>";
+            }
+            ?>
+        </select><br>
+
         <input type="submit" name="submit_update" value="Cập nhật công việc">
     </form>
 <?php endif; ?>
@@ -180,6 +206,18 @@ $detaiResult = $mysqli->query($detaiQuery);
 
     <label for="nhanxet">Nhận xét:</label>
     <input type="text" name="nhanxet" required><br>
+
+    <label for="tennhomtt">Tên nhóm thực tập:</label>
+    <select class="select2" name="tennhomtt">
+        <?php
+        $nhomttQuery = "SELECT DISTINCT tennhom FROM nhomtt";
+        $nhomttResult = $mysqli->query($nhomttQuery);
+
+        while ($nhomttRow = $nhomttResult->fetch_assoc()) {
+            echo "<option value='" . $nhomttRow['tennhom'] . "'>" . $nhomttRow['tennhom'] . "</option>";
+        }
+        ?>
+    </select><br>
 
     <input type="submit" name="submit_add" value="Thêm công việc">
 </form>

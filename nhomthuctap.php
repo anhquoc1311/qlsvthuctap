@@ -161,3 +161,4 @@ $select_result = $mysqli->query($select_query);
     </script>
 </body>
 </html>
+<p><a href="index.php">Quay lại trang chủ!</a></p>

@@ -134,4 +134,4 @@ if (!empty($_POST)) {
   </div> 
 </div>
 </body>
-</html>
+</html><p><a href="index.php">Quay lại trang chủ!</a></p>

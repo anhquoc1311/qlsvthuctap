@@ -19,7 +19,7 @@ if (isset($_POST['dangnhap'])) {
             $_SESSION['dangnhap'] = $row['tentk'];
             $_SESSION['quyen'] = $row['quyen'];
 
-            header("Location: index.html");
+            header("Location: index.php");
             exit();
         } else {
             echo '<script>alert("Tài khoản hoặc mật khẩu không đúng!"); window.location.href = "login.php";</script>';
