@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 25, 2024 at 05:09 AM
+-- Generation Time: Feb 03, 2024 at 02:11 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -32,6 +32,7 @@ CREATE TABLE `congviec` (
   `tencongviec` varchar(100) NOT NULL,
   `tendetai` varchar(100) NOT NULL,
   `tennhomnguoihuongdan` varchar(100) NOT NULL,
+  `tennhomtt` varchar(255) NOT NULL,
   `ngaybatdau` date NOT NULL,
   `ngayketthuc` date NOT NULL,
   `nhanxet` varchar(100) NOT NULL
@@ -41,9 +42,9 @@ CREATE TABLE `congviec` (
 -- Dumping data for table `congviec`
 --
 
-INSERT INTO `congviec` (`id_cv`, `tencongviec`, `tendetai`, `tennhomnguoihuongdan`, `ngaybatdau`, `ngayketthuc`, `nhanxet`) VALUES
-(1, 'làm form', 'quanlyhethong', 'nnn', '2024-01-08', '2024-01-11', 'làm cho hệ thống tốt'),
-(2, '1', 'quanlyhethong', '1', '2024-01-25', '2024-02-03', '1');
+INSERT INTO `congviec` (`id_cv`, `tencongviec`, `tendetai`, `tennhomnguoihuongdan`, `tennhomtt`, `ngaybatdau`, `ngayketthuc`, `nhanxet`) VALUES
+(4, 'công việc 1', 'quản lý dữ liệu', 'nhomhd1', 'nhóm 2', '2024-02-01', '2024-02-02', 'thực hiện tốt'),
+(5, '1', 'quản lý dữ liệu', '1', '', '2024-02-08', '2024-02-10', '1');
 
 -- --------------------------------------------------------
 
@@ -64,7 +65,8 @@ CREATE TABLE `dangky` (
 
 INSERT INTO `dangky` (`tentk`, `username`, `password`, `quyen`) VALUES
 ('Vnpt ', 'admin', 'Vnpt@123', 'admin'),
-('quocc', 'q', 'Quoc@2002', 'user');
+('quocc', 'q', 'Quoc@2002', 'user'),
+('1', '1', 'Quoc@2002', 'admin');
 
 -- --------------------------------------------------------
 
@@ -77,7 +79,7 @@ CREATE TABLE `danhgia` (
   `hotensinhvien` varchar(100) NOT NULL,
   `nhomnguoihuongdan` varchar(100) NOT NULL,
   `ythuckyluat` text NOT NULL,
-  `diemythuckyuat` float NOT NULL,
+  `diemythuckyluat` float NOT NULL,
   `tuanthuthoigian` text NOT NULL,
   `diemtuanthuthoigian` float NOT NULL,
   `kienthuc` text NOT NULL,
@@ -94,6 +96,13 @@ CREATE TABLE `danhgia` (
   `ngaydanhgia` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `danhgia`
+--
+
+INSERT INTO `danhgia` (`id`, `hotensinhvien`, `nhomnguoihuongdan`, `ythuckyluat`, `diemythuckyluat`, `tuanthuthoigian`, `diemtuanthuthoigian`, `kienthuc`, `diemkienthuc`, `kynangnghe`, `diemkynangnghe`, `kinangdoclap`, `diemkinangdoclap`, `khanangnhom`, `diemkhanangnhom`, `khananggiaiquyetcongviec`, `diemkhananggiaiquyetcongviec`, `danhgiachung`, `ngaydanhgia`) VALUES
+(3, '1111', '4', 'tốt', 11, '1', 1, 'tốt', 1, 'tốt', 1, 'tốt', 1, 'tốt', 1, 'tốt', 1, 17, '2024-02-17');
+
 -- --------------------------------------------------------
 
 --
@@ -108,6 +117,13 @@ CREATE TABLE `danhgiaandanh` (
   `danhgiakhac` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `danhgiaandanh`
+--
+
+INSERT INTO `danhgiaandanh` (`id_danhgia`, `hoten_nguoidanhgia`, `mucdohailong`, `nhận xet`, `danhgiakhac`) VALUES
+(1, '1', '2', '1', '1');
+
 -- --------------------------------------------------------
 
 --
@@ -121,6 +137,13 @@ CREATE TABLE `kythuctap` (
   `ngaybatdau` date NOT NULL,
   `ngayketthuc` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `kythuctap`
+--
+
+INSERT INTO `kythuctap` (`id_kythuctap`, `tenkythuctap`, `tendetai`, `ngaybatdau`, `ngayketthuc`) VALUES
+(3, 'kỳ 1', 'quản lý sinh viên', '2024-02-03', '2024-02-04');
 
 -- --------------------------------------------------------
 
@@ -192,15 +215,21 @@ CREATE TABLE `nhomnguoihd` (
 --
 
 INSERT INTO `nhomnguoihd` (`id_nhomnguoihd`, `tennguoihuongdan`, `tennhomthuctap`, `kithuctap`, `tendetai`, `thoigianbatdau`, `thoigianketthuc`) VALUES
-(2, '', '', '', '', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(3, '', '', '', '', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(4, '1', '1', '1', '1', '2024-01-04 14:20:00', '2024-01-19 14:20:00'),
-(5, '1', '1', '1', '1', '2024-01-12 14:38:00', '2024-01-20 14:38:00'),
 (6, 'nhóm 1', 'nhóm 1', 'nhóm 1', 'nhóm 1', '2024-01-23 14:41:00', '2024-01-24 14:41:00'),
 (7, 'nhóm 1', 'nhóm 1', 'nhóm 1', 'nhóm 1', '2024-01-23 14:41:00', '2024-01-24 14:41:00'),
 (8, 'nhóm 1', 'nhóm 1', 'nhóm 1', 'nhóm 1', '2024-01-23 14:41:00', '2024-01-24 14:41:00'),
 (9, 'nhóm 1', 'nhóm 1', 'nhóm 1', 'nhóm 1', '2024-01-23 14:41:00', '2024-01-24 14:41:00'),
-(10, '1', '1', '1', '1', '2024-01-11 14:46:00', '2024-02-08 14:46:00');
+(10, '1', '1', '1', '1', '2024-01-11 14:46:00', '2024-02-08 14:46:00'),
+(11, '1111', '1111', '1111', '1111', '2024-02-09 19:57:00', '2024-02-16 19:57:00'),
+(12, 'anhquan', '3', '3', 'quản lý dữ liệu', '2024-01-31 07:44:00', '2024-02-18 07:44:00'),
+(16, 'anhha', '3', '3', 'quản lý dữ liệu', '2024-02-14 07:46:00', '2024-02-24 07:46:00'),
+(17, 'anhhao', '11', '3', 'quản lý sinh viên', '2024-02-06 07:45:00', '2024-02-15 07:45:00'),
+(18, 'anhhao', '11', '3', 'quản lý dữ liệu', '2024-02-06 07:45:00', '2024-02-15 07:45:00'),
+(19, 'anhhao', '11', '3', 'quản lý dữ liệu', '2024-02-06 07:45:00', '2024-02-15 07:45:00'),
+(20, 'anhquan', '3', '3', 'quản lý dữ liệu', '2024-01-31 07:44:00', '2024-02-18 07:44:00'),
+(21, 'anhquan', '3', '3', 'quản lý dữ liệu', '2024-01-31 07:44:00', '2024-02-18 07:44:00'),
+(22, 'anhquan', '3', '3', 'quản lý dữ liệu', '2024-01-31 07:44:00', '2024-02-18 07:44:00'),
+(23, '1', 'nhóm 1', 'kỳ 1', 'quản lý dữ liệu', '2024-02-08 07:55:00', '2024-02-17 07:55:00');
 
 -- --------------------------------------------------------
 
@@ -210,7 +239,7 @@ INSERT INTO `nhomnguoihd` (`id_nhomnguoihd`, `tennguoihuongdan`, `tennhomthuctap
 
 CREATE TABLE `nhomtt` (
   `id` int(11) NOT NULL,
-  `tennhom` varchar(100) NOT NULL,
+  `tennhom` varchar(255) NOT NULL,
   `detai` varchar(100) NOT NULL,
   `hotensinhvien` varchar(100) NOT NULL,
   `ngaybd` date NOT NULL,
@@ -222,16 +251,10 @@ CREATE TABLE `nhomtt` (
 --
 
 INSERT INTO `nhomtt` (`id`, `tennhom`, `detai`, `hotensinhvien`, `ngaybd`, `ngaykt`) VALUES
-(1, 'as', 'qlsv', 'hi', '2024-01-17', '2024-01-18'),
-(2, 'thm', '1', '1', '2024-01-11', '2024-01-26'),
 (3, 'nhóm 1', '1', 'Trần Anh Quốc', '2024-01-17', '2024-02-03'),
-(4, '1', '1', '', '2024-01-17', '2024-01-26'),
-(5, '11', '11', '', '2024-01-19', '2024-02-03'),
 (6, 'sâ', '11', 'thư', '2024-01-11', '2024-02-04'),
 (7, 'aaa', 'aaa', 'Trần Anh Quốc', '2024-01-17', '2024-02-02'),
-(8, 'nnn', 'ffff', 'aaaaaaaaaa', '2024-01-17', '2024-01-25'),
-(9, '2222', '2222', 'Trần Anh Quốc', '2024-01-12', '2024-01-28'),
-(10, '22222', '2222222', 'Trần Anh Quốc', '2024-01-26', '2024-01-26');
+(11, 'nhóm 2', 'quản lý dữ liệu', 'quốc thư', '2024-02-01', '2024-02-08');
 
 -- --------------------------------------------------------
 
@@ -260,7 +283,9 @@ CREATE TABLE `sinhvien` (
 
 INSERT INTO `sinhvien` (`mssv`, `hotensinhvien`, `gioitinh`, `sdt`, `gmail`, `diachi`, `malop`, `truonghoc`, `nganh`, `khoa`, `nhomnguoihuongdan`, `id`) VALUES
 ('2000416233', 'anhquoc', 'Nam', '0795915320', 'a@gmail.com', '1', '1', 'Sư phạm kỹ thuật', 'khoahoc', '1', '2', 101),
-('2000416210', 'Trần Anh Quốc', 'Nam', '0795915320', 'anhquoc@gmail.com', 'vĩnh long', '1ctt', 'truongkinhte', 'cntt', '45', 'nhom1', 102);
+('2000416210', 'Trần Anh Quốc', 'Nam', '0795915320', 'anhquoc@gmail.com', 'vĩnh long', '1ctt', 'truongkinhte', 'cntt', '45', 'nhom1', 102),
+('2000416234', 'Anh Thư', 'Nữ', '0795915323', 'thu@gmail.com', 'mang thít', '1', 'Sư phạm kỹ thuật', 'khoahoc', '1', 'anh Minh', 103),
+('2000416235', 'Nhựt Hào', 'Nam', '0795915324', 'Hao@gmail.com', 'mang thít', '1', 'Sư phạm kỹ thuật', 'khoahoc', '1', 'anh Minh', 104);
 
 -- --------------------------------------------------------
 
@@ -278,8 +303,8 @@ CREATE TABLE `tendetai` (
 --
 
 INSERT INTO `tendetai` (`tendetai`, `mota`) VALUES
-('quanlyhethong', '1'),
-('quanlysinhvien', 'làm 1 web quản lý sinh viên');
+('quản lý dữ liệu', 'thực hiện 3 sinh viên'),
+('quản lý sinh viên', 'thực hiện khoảng 5-10 sinh viên');
 
 -- --------------------------------------------------------
 
@@ -383,25 +408,25 @@ ALTER TABLE `truong`
 -- AUTO_INCREMENT for table `congviec`
 --
 ALTER TABLE `congviec`
-  MODIFY `id_cv` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id_cv` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `danhgia`
 --
 ALTER TABLE `danhgia`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `danhgiaandanh`
 --
 ALTER TABLE `danhgiaandanh`
-  MODIFY `id_danhgia` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_danhgia` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `kythuctap`
 --
 ALTER TABLE `kythuctap`
-  MODIFY `id_kythuctap` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_kythuctap` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `nguoihuongdan`
@@ -413,19 +438,19 @@ ALTER TABLE `nguoihuongdan`
 -- AUTO_INCREMENT for table `nhomnguoihd`
 --
 ALTER TABLE `nhomnguoihd`
-  MODIFY `id_nhomnguoihd` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id_nhomnguoihd` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT for table `nhomtt`
 --
 ALTER TABLE `nhomtt`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `sinhvien`
 --
 ALTER TABLE `sinhvien`
-  MODIFY `id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=103;
+  MODIFY `id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=105;
 
 --
 -- Constraints for dumped tables
