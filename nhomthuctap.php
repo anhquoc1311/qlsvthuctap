@@ -1,5 +1,5 @@
 <?php
-$mysqli = new mysqli('localhost', 'root', '', 'quanlysvtt');
+include('config/connect.php');
 
 // Kiểm tra kết nối
 if ($mysqli->connect_error) {
@@ -159,6 +159,12 @@ $select_result = $mysqli->query($select_query);
             document.getElementById('updateForm').style.display = 'block';
         }
     </script>
+    <div class="w3-footer"><hr>
+        <span class="text-sm text-blue" style="font-size:12px ; color: #0073B7">
+            <p>TRƯỜNG ĐẠI HỌC SƯ PHẠM KỸ THUẬT VĨNH LONG</p>
+            <p>Địa chỉ: 73 Nguyễn Huệ, phường 2, thành phố Vỉnh Long, tỉnh Vỉnh Long<br>
+            Điện thoại: (+84) 02703.822141 - Fax: (+84) 02703.821003 - Email: spktvl@vlute.edu.vn</p>
+        </span>
+    </div>
 </body>
 </html>
-<p><a href="index.php">Quay lại trang chủ!</a></p>

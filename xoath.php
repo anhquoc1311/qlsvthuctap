@@ -7,7 +7,7 @@ if (mysqli_connect_error()) {
 $id = $_GET['id'];
 
 // Use a prepared statement to prevent SQL injection
-$sql = "DELETE FROM tendetai WHERE tendetai = ?";
+$sql = "DELETE FROM truong WHERE truonghoc = ?";
 $stmt = $conn->prepare($sql);
 
 // Bind the parameter
@@ -15,7 +15,7 @@ $stmt->bind_param("s", $id);
 
 // Execute the statement
 if ($stmt->execute()) {
-    header('location: danhsachdetai.php');
+    header('location: themth.php');
 } else {
     echo "Xoá dữ liệu thất bại: " . $stmt->error;
 }

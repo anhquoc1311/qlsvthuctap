@@ -1,21 +1,12 @@
 <?php
-// Kết nối đến cơ sở dữ liệu
-include('config/connect.php');
-// Kiểm tra kết nối
-if ($mysqli->connect_error) {
-    die('Connect Error (' . $mysqli->connect_errno . ') ' . $mysqli->connect_error);
-}
+    include('config/connect.php');
+    $id = $_GET['id'];
+    $sua = "SELECT * FROM nguoihuongdan WHERE id_nguoihuongdan='$id'" ;
+    $query_sua = mysqli_query($mysqli,$sua);
+    $row = mysqli_fetch_array($query_sua);
 
-// Khởi tạo biến thông báo
-$notification = "";
-$avata = "";
-$successNotification = "";
-// Xử lý khi form được gửi
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Thực hiện thêm người hướng dẫn
-    if (isset($_POST['add'])) {
-        // Lấy dữ liệu từ form
-        $ten = $_POST['ten'];
+    if(isset($_POST['edit'])) {
+       $ten = $_POST['ten'];
         $sdt = $_POST['sdt'];
         $gmail = $_POST['gmail'];
         $chucdanh = $_POST['chucdanh'];
@@ -30,98 +21,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $avata_tmp = $_FILES['avata']['tmp_name'];
         $avata = time() . '_' . $avata;
             
-        // Thực hiện kiểm tra username đã tồn tại hay chưa
-        $checkQuery = "SELECT * FROM nguoihuongdan WHERE username = '$username'";
-        $checkResult = $mysqli->query($checkQuery);
+        // // Thực hiện kiểm tra username đã tồn tại hay chưa
+        // $checkQuery = "SELECT * FROM nguoihuongdan WHERE ten = '$ten'" ;
+        // $checkResult = $mysqli->query($checkQuery);
 
-        if ($checkResult->num_rows > 0) {
-            $successNotification = "<span style='color: red;'>Tên người hướng dẫn tồn tại!" . $mysqli->error . "</span>";
-        } else {
+        // if ($checkResult->num_rows > 0) {
+        //     $successNotification = "<span style='color: red;'>Tên người hướng dẫn tồn tại!" . $mysqli->error . "</span>";
+        // } else {
             // Thực hiện truy vấn thêm người hướng dẫn
-            $query = "INSERT INTO nguoihuongdan (ten, sdt, gmail, chucdanh, phong, username, password, zalo, facebook, github, avata) VALUES ('$ten', '$sdt', '$gmail', '$chucdanh', '$phong', '$username', '$password', '$zalo', '$facebook', '$github', '$avata')";
-            move_uploaded_file($avata_tmp, 'image/' . $avata);
-
+            move_uploaded_file ($avata_tmp, 'image/'.$avata);
+            $query = "UPDATE nguoihuongdan SET ten ='$ten',sdt ='$sdt',gmail ='$gmail',chucdanh ='$chucdanh',phong ='$phong',username ='$username',password ='$password',zalo ='$zalo',facebook ='$facebook',github ='$github', avata='$avata' WHERE id_nguoihuongdan='$id'";  
+                
             if ($mysqli->query($query)) {
-                $successNotification = "Thêm người hướng dẫn thành công.";
+                $successNotification = "Cập nhật thông tin thành công.";
+                echo "<script>
+                    setTimeout(function() {
+                    window.location.href = 'themxoasua_nguoihd.php';
+                    }, 2000); // 2000 milliseconds = 2 seconds
+                </script>";
             } else {
-               $successNotification = "<span style='color: red;'>Thêm người hướng dẫn thất bại!" . $mysqli->error . "</span>";
+               $successNotification = "<span style='color: red;'>Cập nhật thông tin thất bại!" . $mysqli->error . "</span>";
             }
-        }
+        // }
     }
-    // Thực hiện xóa người hướng dẫn
-    elseif (isset($_POST['delete'])) {
-        $id = $_POST['delete_id'];
-        if ($mysqli->query("DELETE FROM nguoihuongdan WHERE id_nguoihuongdan=$id")) {
-            $successNotification = "Xóa người hướng dẫn thành công.";
-        } else {
-           $successNotification = "<span style='color: red;'>Xoá người hướng dẫn thất bại!" . $mysqli->error . "</span>";
-        }
-    }
-
-    elseif (isset($_POST['edit'])) {
-        $id = $_POST['edit_id'];
-        $new_ten = $_POST['new_ten'];
-        $new_sdt = $_POST['new_sdt'];
-        $new_gmail = $_POST['new_gmail'];
-        $new_chucdanh = $_POST['new_chucdanh'];
-        $new_phong = $_POST['new_phong'];
-        $new_username = $_POST['new_username'];
-        $new_password = $_POST['new_password'];
-        $new_zalo = $_POST['new_zalo'];
-        $new_facebook = $_POST['new_facebook'];
-        $new_github = $_POST['new_github'];
-
-        $new_avata = $_FILES['new_avata']['name'];
-        $new_avata_tmp = $_FILES['new_avata']['tmp_name'];
-
-        // Kiểm tra xem có dữ liệu mới hay không
-        $updateData = [];
-        if (!empty($new_ten)) $updateData[] = "ten='$new_ten'";
-        if (!empty($new_sdt)) $updateData[] = "sdt='$new_sdt'";
-        if (!empty($new_gmail)) $updateData[] = "gmail='$new_gmail'";
-        if (!empty($new_chucdanh)) $updateData[] = "chucdanh='$new_chucdanh'";
-        if (!empty($new_phong)) $updateData[] = "phong='$new_phong'";
-        if (!empty($new_username)) $updateData[] = "username='$new_username'";
-        if (!empty($new_password)) $updateData[] = "password='$new_password'";
-        if (!empty($new_zalo)) $updateData[] = "zalo='$new_zalo'";
-        if (!empty($new_facebook)) $updateData[] = "facebook='$new_facebook'";
-        if (!empty($new_github)) $updateData[] = "github='$new_github'";
-        if (!empty($new_avata)) $updateData[] = "avata='$new_avata'";
-        // Check if 'new_avata' is set in $_FILES
-        if (isset($_FILES['new_avata'])) {
-            // Check if 'name' and 'tmp_name' are set in $_FILES['new_avata']
-            if (isset($_FILES['new_avata']['name']) && isset($_FILES['new_avata']['tmp_name'])) {
-                $new_avata = $_FILES['new_avata']['name'];
-                $new_avata_tmp = $_FILES['new_avata']['tmp_name'];
-            } else {
-                // Set default values or handle the case where no new file is selected.
-                $new_avata = "";
-                $new_avata_tmp = "";
-            }
-        } else {
-            // Set default values or handle the case where 'new_avata' is not set in $_FILES.
-            $new_avata = "";
-            $new_avata_tmp = "";
-        }
-
-
-
-        // Kiểm tra xem có dữ liệu mới để cập nhật hay không
-        if (!empty($updateData)) {
-            // Thực hiện truy vấn sửa người hướng dẫn
-            $query = "UPDATE nguoihuongdan SET " . implode(", ", $updateData) . " WHERE id_nguoihuongdan=$id";
-            move_uploaded_file($new_avata_tmp, 'image/' . $new_avata);
-            if ($mysqli->query($query)) {
-                $successNotification = "Sửa người hướng dẫn thành công.";
-            } else {
-                $successNotification = "<span style='color: red;'>Sửa người hướng dẫn thất bại!" . $mysqli->error . "</span>";
-            }
-        } else {
-            $successNotification = "<span style='color: red;'>Không có dữ liệu mới để cập nhật!" . $mysqli->error . "</span>";
-        }
-    }}
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -165,6 +88,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     th {
         background-color: #2072b3; /* Màu nền xanh dương đậm cho phần header */
+        color: white;
     }
 
     tr:nth-child(even) {
@@ -247,6 +171,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         text-align: center;
         color: blue;
         font-size: 30px;
+        /* background: cadetblue; */
+        text-shadow: 10px 2px 4px rgba(0, 0, 0, 0.5);
         font-weight: bolder;
     }
     h3 {
@@ -287,66 +213,50 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             display: inline-block;
             margin-right: 10px;
         }
-        .home {
-            background: #04AA6D;
-            /* width: auto; */
-            width: 77px;
-            margin-top: 20px;
-            margin-left: 29px;
-            /* text-decoration: none; */
-            font-size: 20px;
-            border-radius: 8px;
-        }
-        a {
-            color: white;
-            text-decoration: none;
-        }
     </style>
 </head>
 <body>
-    <div class="home">
-        <a href="index.php"> < Home</a>
-    </div>
     <h2>Quản lý Người hướng dẫn</h2>
 
     <!-- Form Thêm Người hướng dẫn -->
     <div class="form">
     <form method="POST" enctype="multipart/form-data">
-        <h3>Thêm Người hướng dẫn</h3>
+        <h3>Sửa thông tin người hướng dẫn</h3>
         <label>Tên:</label>
-        <input type="text" name="ten" required>
+        <input type="text" name="ten" value="<?php echo $row['ten'] ?>" required>
         <br>
         <label>Số điện thoại:</label>
-        <input type="text" name="sdt" required>
+        <input type="text" name="sdt" value="<?php echo $row['sdt'] ?>" required>
         <br>
         <label>Email:</label>
-        <input type="email" name="gmail" required>
+        <input type="email" name="gmail" value="<?php echo $row['gmail'] ?>" required>
         <br>
         <label>Chức danh:</label>
-        <input type="text" name="chucdanh" required>
+        <input type="text" name="chucdanh" value="<?php echo $row['chucdanh'] ?>" required>
         <br>
         <label>Phòng:</label>
-        <input type="text" name="phong" required>
+        <input type="text" name="phong" value="<?php echo $row['phong'] ?>" required>
         <br>
         <label>Username:</label>
-        <input type="text" name="username" required>
+        <input type="text" name="username" value="<?php echo $row['username'] ?>" required>
         <br>
         <label>Password:</label>
-        <input type="password" name="password" required>
+        <input type="password" name="password" value="<?php echo $row['password'] ?>" required>
         <br>
         <label>Zalo:</label>
-        <input type="text" name="zalo" required>
+        <input type="text" name="zalo" value="<?php echo $row['zalo'] ?>" required>
         <br>
         <label>Facebook:</label>
-        <input type="text" name="facebook" required>
+        <input type="text" name="facebook" value="<?php echo $row['facebook'] ?>" required>
         <br>
         <label>Github:</label>
-        <input type="text" name="github" required>
+        <input type="text" name="github" value="<?php echo $row['github'] ?>" required>
         <br>
         <label>Avata:</label>
-        <input type="file" name="avata" >
+        <input type="file" name="avata" value="<?php echo $row['avata'] ?>" >
         <br>
-        <button type="submit" name="add">Thêm</button>
+        <button type="submit" name="edit">Cập nhật</button>
+        <a href="themxoasua_nguoihd.php"><button style="background-color: grey;" type="button" class="btnquayve">Quay Về </button></a>
     </form>
       <?php if (!empty($successNotification)): ?>
             <div id="successNotification" style="color: green;"><?php echo $successNotification; ?></div>
@@ -398,10 +308,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
             echo "</td>";
             echo "<td class='actions'>
-                    <form method='POST' onsubmit='return confirm(\"Bạn có chắc chắn muốn xoá người hướng dẫn này không?\");'>
-                    <input type='hidden' name='delete_id' value='{$row['id_nguoihuongdan']}'>
-                    <button class='btndel' name='delete'><i class='fa-solid fa-trash-can'></i></button>
-                    </form>
                     <a href='suanguoihd.php?id=" . $row['id_nguoihuongdan'] . "'>
                         <button class='btnedit'><i class='fa-solid fa-pen-to-square'></i></button>
                     </a> 
@@ -434,3 +340,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 </body>
 </html>
+
+

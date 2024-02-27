@@ -6,7 +6,7 @@ if (isset($_POST['dangnhap'])) {
     $taikhoan = $_POST['user'];
     $matkhau = $_POST['password'];
 
-    $sql = "SELECT * FROM dangky WHERE username='" . $taikhoan . "' AND password='" . $matkhau . "' LIMIT 1 ";
+    $sql = "SELECT * FROM nguoihuongdan WHERE username='" . $taikhoan . "' AND password='" . $matkhau . "' LIMIT 1 ";
     $result = mysqli_query($mysqli, $sql);
 
     if ($result) {
@@ -16,9 +16,7 @@ if (isset($_POST['dangnhap'])) {
             $row = mysqli_fetch_assoc($result);
             // Lưu thông tin vào session
             $_SESSION['loggedin'] = true;
-            $_SESSION['dangnhap'] = $row['tentk'];
-            $_SESSION['quyen'] = $row['quyen'];
-
+            $_SESSION['dangnhap'] = $row['ten'];
             header("Location: index.php");
             exit();
         } else {
@@ -36,7 +34,6 @@ if (isset($_POST['dangky'])) {
     exit();
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -119,6 +116,13 @@ if (isset($_POST['dangky'])) {
             <button id = "sign-in" name="dangnhap">Đăng nhập</button>
             <button id="sign-up" name="dangky">Đăng ký</button>
         </form>
+    </div>
+    <div class="w3-footer"><hr>
+        <span class="text-sm text-blue" style="font-size:12px ; color: #0073B7">
+            <p>TRƯỜNG ĐẠI HỌC SƯ PHẠM KỸ THUẬT VĨNH LONG</p>
+            <p>Địa chỉ: 73 Nguyễn Huệ, phường 2, thành phố Vỉnh Long, tỉnh Vỉnh Long<br>
+            Điện thoại: (+84) 02703.822141 - Fax: (+84) 02703.821003 - Email: spktvl@vlute.edu.vn</p>
+        </span>
     </div>
 </body>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>

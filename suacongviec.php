@@ -1,40 +1,9 @@
 <?php
-include('config/connect.php');
-
+$mysqli = new mysqli('localhost', 'root', '', 'quanlysvtt');
 if ($mysqli->connect_error) {
-    die('Kết nối không thành công: ' . $mysqli->connect_error);
+    die('Connect Error (' . $mysqli->connect_errno . ') ' . $mysqli->connect_error);
 }
 
-// Add công việc
-if (isset($_POST['submit_add'])) {
-    $tencongviec = $_POST['tencongviec'];
-    $tendetai = $_POST['tendetai'];
-    $tennhomnguoihuongdan = $_POST['tennhomnguoihuongdan'];
-    $ngaybatdau = $_POST['ngaybatdau'];
-    $ngayketthuc = $_POST['ngayketthuc'];
-    $nhanxet = $_POST['nhanxet'];
-
-    $insertQuery = "INSERT INTO congviec (tencongviec, tendetai, tennhomnguoihuongdan, ngaybatdau, ngayketthuc, nhanxet) 
-                    VALUES ('$tencongviec', '$tendetai', '$tennhomnguoihuongdan', '$ngaybatdau', '$ngayketthuc', '$nhanxet')";
-
-    if ($mysqli->query($insertQuery) === TRUE) {
-        $successNotification = "Thêm công việc thành công.";
-    } else {
-        $successNotification = "<span style='color: red;'>Thêm công việc thất bại!" . $mysqli->error . "</span>";
-    }
-}
-
-// Delete công việc
-if (isset($_POST['delete'])) {
-        $id = $_POST['delete_id'];
-        if ($mysqli->query("DELETE FROM congviec WHERE id_cv=$id")) {
-             $successNotification = "Xóa công việc thành công.";
-        } else {
-            $successNotification = "<span style='color: red;'>Xoá công việc thất bại!" . $mysqli->error . "</span>";
-        }
-    }
-
-// Edit công việc
 if (isset($_GET['edit_id'])) {
     $edit_id = $_GET['edit_id'];
 
@@ -45,8 +14,9 @@ if (isset($_GET['edit_id'])) {
     $editData = $editResult->fetch_assoc();
 }
 
-// Update công việc
-if (isset($_POST['submit_update'])) {
+$selected_tendetai = isset($_GET['selected_tendetai']) ? $_GET['selected_tendetai'] : '';
+
+if (isset($_POST['edit'])) {
     $edit_id = $_POST['edit_id'];
     $tencongviec = $_POST['tencongviec'];
     $tendetai = $_POST['tendetai'];
@@ -55,26 +25,25 @@ if (isset($_POST['submit_update'])) {
     $ngayketthuc = $_POST['ngayketthuc'];
     $nhanxet = $_POST['nhanxet'];
 
-    $updateQuery = "UPDATE congviec 
-                    SET tencongviec = '$tencongviec', tendetai = '$tendetai', tennhomnguoihuongdan = '$tennhomnguoihuongdan',
-                        ngaybatdau = '$ngaybatdau', ngayketthuc = '$ngayketthuc', nhanxet = '$nhanxet' 
-                    WHERE id_cv = $edit_id";
+    $query = "UPDATE congviec SET tencongviec = '$tencongviec', tendetai = '$tendetai', tennhomnguoihuongdan = '$tennhomnguoihuongdan',
+                    ngaybatdau = '$ngaybatdau', ngayketthuc = '$ngayketthuc', nhanxet = '$nhanxet' 
+                WHERE id_cv = $edit_id";
 
-    if ($mysqli->query($updateQuery) === TRUE) {
-        $successNotification = "Cập nhật công việc thành công.";
+    if ($mysqli->query($query)) {
+        $successNotification = "Cập nhật thông tin thành công.";
+        echo "<script>
+                setTimeout(function() {
+                window.location.href = 'themxoasuacv.php';
+                }, 2000); // 2000 milliseconds = 2 seconds
+            </script>";
     } else {
-        $successNotification = "<span style='color: red;'>Cập nhật công việc thất bại!" . $mysqli->error . "</span>";
+        $successNotification = "<span style='color: red;'>Cập nhật thông tin thất bại!" . $mysqli->error . "</span>";
     }
 }
 
-// Display danh sách công việc
-$selectQuery = "SELECT c.*, d.tendetai FROM congviec c
-                JOIN tendetai d ON c.tendetai = d.tendetai";
-$result = $mysqli->query($selectQuery);
-
-// Fetch tên đề tài for dropdown
-$detaiQuery = "SELECT * FROM tendetai";
-$detaiResult = $mysqli->query($detaiQuery);
+// Fetch the data for displaying in the table
+$selectDataQuery = "SELECT * FROM congviec";
+$result = $mysqli->query($selectDataQuery);
 ?>
 
 <!DOCTYPE html>
@@ -82,11 +51,17 @@ $detaiResult = $mysqli->query($detaiQuery);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Include jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Include Select2 CSS and JS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css">
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.4.2/css/all.css">
-    <title>Quản lý công việc</title>
-</head>
-<style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+
+    <title>Quản Lý Công Việc</title>
+    <style>
       body {
         background-color: #f0f7f9; /* Màu nền xanh dương */
         color: #333; /* Màu chữ trắng */
@@ -137,6 +112,7 @@ $detaiResult = $mysqli->query($detaiQuery);
 
     h2 {
         color: #2072b3; /* Màu chữ trắng cho tiêu đề h2 */
+        font-weight: bold;
     }
 
     input[type="text"], input[type="password"], input[type="email"], select {
@@ -167,7 +143,7 @@ $detaiResult = $mysqli->query($detaiQuery);
             border-radius: 10px; /* Bo góc của form */
         }
     .form input {
-            width: auto;
+            width: 216px;
             padding: 10px;
             box-sizing: border-box;
             border: 1px solid #ccc;
@@ -194,8 +170,9 @@ $detaiResult = $mysqli->query($detaiQuery);
     h2 {
         text-align: center;
         color: blue;
-        font-weight: bold;
         font-size: 30px;
+        /* background: cadetblue; */
+        text-shadow: 10px 2px 4px rgba(0, 0, 0, 0.5);
     }
     h3 {
         color: black;
@@ -212,6 +189,7 @@ $detaiResult = $mysqli->query($detaiQuery);
         border-radius: 5px;
         cursor: pointer;
         width: 130px;
+        margin-top: 12px;
         /* text-align: center; */
     }
     .btndel {
@@ -241,14 +219,6 @@ $detaiResult = $mysqli->query($detaiQuery);
             display: inline-block;
             margin-right: 10px;
         }
-        input[type="text"] {
-            width: 212px;
-            margin-bottom: 6px;
-        }
-        input[type="date"] {
-            width: 213px;
-            margin-bottom: 6px;
-        }
         .home {
             background: #04AA6D;
             /* width: auto; */
@@ -263,68 +233,57 @@ $detaiResult = $mysqli->query($detaiQuery);
             color: white;
             text-decoration: none;
         }
-    </style>
-<body>
-
-<div class="home">
-        <a href="index.php"> < Home</a>
-    </div>
-<h2>Thêm công việc mới</h2>
-<div class="form">
-<form method="post" action="themxoasuacv.php">
-    <label for="tencongviec">Tên công việc:</label>
-    <input type="text" name="tencongviec" required><br>
-
-    <label for="tendetai">Tên đề tài:</label>
-    <select name="tendetai">
-        <?php $detaiResult = $mysqli->query($detaiQuery); ?>
-        <?php while ($row = $detaiResult->fetch_assoc()) : ?>
-            <option value="<?php echo $row['tendetai']; ?>"><?php echo $row['tendetai']; ?></option>
-        <?php endwhile; ?>
-    </select><br>
-
-    <label for="tennhomnguoihuongdan">Tên nhóm người hướng dẫn:</label>
-    <select name="tennhomnguoihuongdan" required>
-    <?php
-    // Query to fetch distinct values for 'tennhomnguoihuongdan' from your database
-    $nhomQuery = "SELECT DISTINCT tennguoihuongdan FROM nhomnguoihd";
-    $nhomResult = $mysqli->query($nhomQuery);
-
-    // Check if the query was successful
-    if ($nhomResult) {
-        while ($row = $nhomResult->fetch_assoc()) {
-            $selected = ($row['tennguoihuongdan'] == $editData['tennguoihuongdan']) ? 'selected' : '';
-            echo "<option value='{$row['tennguoihuongdan']}' $selected>{$row['tennguoihuongdan']}</option>";
+        .form textarea {
+            vertical-align: top; /* Adjust the vertical alignment to the top */
+            width: 214px;
+            border-radius: 7px;
+            height: 60px;
+            text-align: center;
         }
-    }
-    ?>
-    </select><br>
-
-    <label for="ngaybatdau">Ngày bắt đầu:</label>
-    <input type="date" name="ngaybatdau" required><br>
-
-    <label for="ngayketthuc">Ngày kết thúc:</label>
-    <input type="date" name="ngayketthuc" required><br>
-
-    <label for="nhanxet">Nhận xét:</label>
-    <input type="text" name="nhanxet" required><br>
-
-    <button type="submit" name="submit_add" >Thêm </button>
-</form>
-  <?php if (!empty($successNotification)): ?>
+        input[type="date"] {
+             margin-bottom: 10px;
+            width: 216px; /* Set a fixed width for date input boxes */
+            padding: 8px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<h2>Quản Lý Công Việc</h2>
+    <div class="form">
+    <!-- Form Thêm Kỳ Thực Tập -->
+    <form method="POST">
+        <h3>Sửa công việc</h3>
+        <input type="hidden" name="edit_id" value="<?php echo $editData['id_cv']; ?>">
+        <label>Tên công việc:</label>
+        <input type="text" name="tencongviec" value="<?php echo $editData['tencongviec'] ?>" required>
+        <br>
+        <label>Đề tài:</label>
+        <input type="text" name="tendetai" value="<?php echo $editData['tendetai'] ?>" required>
+        <br>
+        <label>Tên người hướng dẫn:</label>
+        <input type="text" name="tennhomnguoihuongdan" value="<?php echo $editData['tennhomnguoihuongdan'] ?>"  required>
+        <br>
+        <label>Ngày bắt đầu:</label>
+        <input type="date" name="ngaybatdau" value="<?php echo $editData['ngaybatdau'] ?>"  required>
+        <br>
+        <label>Ngày kết thúc:</label>
+        <input type="date" name="ngayketthuc" value="<?php echo $editData['ngayketthuc'] ?>"  required>
+        <br>
+        <label>Nhận xét:</label>
+        <textarea  style="width: 214px;border-radius: 7px; height: 60px;" type="text" name="nhanxet" value="<?php echo $editData['nhanxet'] ?>"  required></textarea>
+        <br>
+        <button type="submit" name="edit">Cập nhật</button>
+        <a href="themxoasuacv.php"><button style="background-color: grey;" type="button" class="btnquayve">Quay Về </button></a>
+    </form>
+     <?php if (!empty($successNotification)): ?>
             <div id="successNotification" style="color: green;"><?php echo $successNotification; ?></div>
-            <script>
-            setTimeout(function() {
-            var successNotification = document.getElementById('successNotification');
-                if (successNotification) {
-                    successNotification.style.display = 'none';
-                }
-            }, 2000); // 2000 milliseconds = 2 seconds
-    </script>
-        <?php endif; ?>
+    <?php endif; ?>
 </div>
-
-
+<!-- Bảng Danh sách Kỳ Thực Tập -->
 <h2>Danh sách công việc</h2>
 <table border="1">
     <tr>
@@ -337,34 +296,25 @@ $detaiResult = $mysqli->query($detaiQuery);
         <th>Nhận xét</th>
         <th>Thao tác</th>
     </tr>
-    <?php while ($row = $result->fetch_assoc()) : ?>
-        <tr>
-            <td><?php echo $row['id_cv']; ?></td>
-            <td><?php echo $row['tencongviec']; ?></td>
-            <td><?php echo $row['tendetai']; ?></td>
-            <td><?php echo $row['tennhomnguoihuongdan']; ?></td>
-            <td><?php echo $row['ngaybatdau']; ?></td>
-            <td><?php echo $row['ngayketthuc']; ?></td>
-            <td><?php echo $row['nhanxet']; ?></td>
-            <td>
-                <!-- <a href="themxoasuacv.php?delete_id=<?php echo $row['id_cv']; ?>" onclick="return confirm('Bạn chắc chắn muốn xóa?')"><i class='fa-solid fa-trash-can'></i></a> -->
-                <form method='POST' onsubmit='return confirm("Bạn có chắc chắn muốn xoá công việc này không?");'>
-                <input type='hidden' name='delete_id' value='<?php echo $row['id_cv']; ?>'>
-                <button class='btndel' name='delete'><i class='fa-solid fa-trash-can'></i></button>
+    <?php
+    while ($row = $result->fetch_assoc()) {
+        echo "<tr>";
+        echo "<td>{$row['id_cv']}</td>";
+        echo "<td>{$row['tencongviec']}</td>";
+        echo "<td>{$row['tendetai']}</td>";
+        echo "<td>{$row['tennhomnguoihuongdan']}</td>";
+        echo "<td>{$row['ngaybatdau']}</td>";
+        echo "<td>{$row['ngayketthuc']}</td>";
+        echo "<td>{$row['nhanxet']}</td>";
+        echo "<td>    
+            <a href='suacongviec.php?edit_id=" . $row['id_cv'] . "' class='edit'>
+                <button class='btnedit'><i class='fa-solid fa-pen-to-square'></i></button>
+            </a>
+        </td>";
 
-            </form>
-
-                <a href='suacongviec.php?edit_id=<?php echo $row['id_cv']; ?>' class='edit'>
-                    <button class='btnedit'><i class='fa-solid fa-pen-to-square'></i></button>
-                </a>
-
-            </td>
-        </tr>
-    <?php endwhile; ?>
+    }
+    ?>
 </table>
-
-</body>
-</html>
 <div class="w3-footer"><hr>
         <span class="text-sm text-blue" style="font-size:12px ; color: #0073B7">
             <p>TRƯỜNG ĐẠI HỌC SƯ PHẠM KỸ THUẬT VĨNH LONG</p>
@@ -372,7 +322,7 @@ $detaiResult = $mysqli->query($detaiQuery);
             Điện thoại: (+84) 02703.822141 - Fax: (+84) 02703.821003 - Email: spktvl@vlute.edu.vn</p>
         </span>
     </div>
-<?php
-// Đóng kết nối
-$mysqli->close();
-?>
+<p><a href="index.php">Quay lại trang chủ!</a></p>
+
+</body>
+</html>

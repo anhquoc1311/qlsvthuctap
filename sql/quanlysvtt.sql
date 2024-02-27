@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 03, 2024 at 02:11 AM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- Generation Time: Feb 23, 2024 at 03:44 PM
+-- Server version: 10.4.28-MariaDB
+-- PHP Version: 8.0.28
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -43,8 +43,8 @@ CREATE TABLE `congviec` (
 --
 
 INSERT INTO `congviec` (`id_cv`, `tencongviec`, `tendetai`, `tennhomnguoihuongdan`, `tennhomtt`, `ngaybatdau`, `ngayketthuc`, `nhanxet`) VALUES
-(4, 'công việc 1', 'quản lý dữ liệu', 'nhomhd1', 'nhóm 2', '2024-02-01', '2024-02-02', 'thực hiện tốt'),
-(5, '1', 'quản lý dữ liệu', '1', '', '2024-02-08', '2024-02-10', '1');
+(20, 'aaaaa', 'aaaa2232', 'asdadasd', '', '2024-02-17', '2024-02-03', 'aaaaaaaaaa'),
+(21, 'aaaaaaaaaaa', 'aaaa2232', 'aaaaaaaaaaaaa', '', '2024-02-17', '2024-02-25', 'aaaaaaaaa');
 
 -- --------------------------------------------------------
 
@@ -96,13 +96,6 @@ CREATE TABLE `danhgia` (
   `ngaydanhgia` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `danhgia`
---
-
-INSERT INTO `danhgia` (`id`, `hotensinhvien`, `nhomnguoihuongdan`, `ythuckyluat`, `diemythuckyluat`, `tuanthuthoigian`, `diemtuanthuthoigian`, `kienthuc`, `diemkienthuc`, `kynangnghe`, `diemkynangnghe`, `kinangdoclap`, `diemkinangdoclap`, `khanangnhom`, `diemkhanangnhom`, `khananggiaiquyetcongviec`, `diemkhananggiaiquyetcongviec`, `danhgiachung`, `ngaydanhgia`) VALUES
-(3, '1111', '4', 'tốt', 11, '1', 1, 'tốt', 1, 'tốt', 1, 'tốt', 1, 'tốt', 1, 'tốt', 1, 17, '2024-02-17');
-
 -- --------------------------------------------------------
 
 --
@@ -122,7 +115,23 @@ CREATE TABLE `danhgiaandanh` (
 --
 
 INSERT INTO `danhgiaandanh` (`id_danhgia`, `hoten_nguoidanhgia`, `mucdohailong`, `nhận xet`, `danhgiakhac`) VALUES
-(1, '1', '2', '1', '1');
+(1, '1', '2', '1', '1'),
+(2, 'anh quân', '1', 'aaa', '1'),
+(3, 'anh quân', '1', 'aaa', '1'),
+(4, 's', '1', 'a', 'S'),
+(5, 'ádas', '1', 'aaasas', 'âsasas'),
+(6, 'ádas', '3', 'aaasas', 'âsasas'),
+(7, 'khanhdang', '1', 'eweee', 'eeee'),
+(8, 'wwew', '1', 'ewrwer', 'werwer'),
+(9, 'wwwwwwwwwwwwwww', '1', 'wwwwwwww', 'wwwwwwwwwwwww'),
+(10, 'khanhdang', '1', 'a', 'a'),
+(11, 'khanhdang', '1', 'aaa', 'aaaa'),
+(12, 'khanhdang', '1', 'aaa', 'aaaa'),
+(13, 'khanhdang', '1', 'aa', 'aaa'),
+(14, 'khanhdang', '1', 'aaa', 'aaa'),
+(15, 'khanhdang', '1', 'aaa', 'aaaa'),
+(16, 'khanhdang', '1', 'aaa', 'aaaa'),
+(17, 'khanhdang', '1', 'aaa', 'aaaa');
 
 -- --------------------------------------------------------
 
@@ -143,7 +152,8 @@ CREATE TABLE `kythuctap` (
 --
 
 INSERT INTO `kythuctap` (`id_kythuctap`, `tenkythuctap`, `tendetai`, `ngaybatdau`, `ngayketthuc`) VALUES
-(3, 'kỳ 1', 'quản lý sinh viên', '2024-02-03', '2024-02-04');
+(34, 'adasdasdas', 'quản lý sinh viên', '2024-02-29', '2024-02-18'),
+(35, 'aaaaaaaasascsfdsad', 'aaaa2232', '2024-03-10', '2024-03-10');
 
 -- --------------------------------------------------------
 
@@ -152,7 +162,7 @@ INSERT INTO `kythuctap` (`id_kythuctap`, `tenkythuctap`, `tendetai`, `ngaybatdau
 --
 
 CREATE TABLE `nganh` (
-  `nganh` varchar(100) NOT NULL,
+  `tennganh` varchar(100) NOT NULL,
   `kyhieu` varchar(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -160,11 +170,10 @@ CREATE TABLE `nganh` (
 -- Dumping data for table `nganh`
 --
 
-INSERT INTO `nganh` (`nganh`, `kyhieu`) VALUES
-('cntt', '1ctt'),
-('cntt2', '2'),
-('khoahoc', '2'),
-('kinhte1', 'kt');
+INSERT INTO `nganh` (`tennganh`, `kyhieu`) VALUES
+('aaaasasadasdasd', 'âsasasas'),
+('âsas', 'âsasas'),
+('ssss', 'ssss');
 
 -- --------------------------------------------------------
 
@@ -192,7 +201,7 @@ CREATE TABLE `nguoihuongdan` (
 --
 
 INSERT INTO `nguoihuongdan` (`id_nguoihuongdan`, `ten`, `sdt`, `gmail`, `chucdanh`, `phong`, `username`, `password`, `zalo`, `facebook`, `github`, `avata`) VALUES
-(4, 'anh thư', 1, 'anh@gmail.ocm', 'nhân viên', '1', 'anhquoc', '123456', 'zalo', 'facde', 'g', 'g');
+(15, 'Lê Khánh Đăng', 42342343, 'khanhdang25062001@gmail.com', 'abád', 'Bảo Vệ', 'khang123', 'khang123', '234234', 'https://www.facebook.com/thanhvancute2506/', 'sdfsd', '1708695209_OIP.jpg');
 
 -- --------------------------------------------------------
 
@@ -215,21 +224,11 @@ CREATE TABLE `nhomnguoihd` (
 --
 
 INSERT INTO `nhomnguoihd` (`id_nhomnguoihd`, `tennguoihuongdan`, `tennhomthuctap`, `kithuctap`, `tendetai`, `thoigianbatdau`, `thoigianketthuc`) VALUES
-(6, 'nhóm 1', 'nhóm 1', 'nhóm 1', 'nhóm 1', '2024-01-23 14:41:00', '2024-01-24 14:41:00'),
-(7, 'nhóm 1', 'nhóm 1', 'nhóm 1', 'nhóm 1', '2024-01-23 14:41:00', '2024-01-24 14:41:00'),
-(8, 'nhóm 1', 'nhóm 1', 'nhóm 1', 'nhóm 1', '2024-01-23 14:41:00', '2024-01-24 14:41:00'),
-(9, 'nhóm 1', 'nhóm 1', 'nhóm 1', 'nhóm 1', '2024-01-23 14:41:00', '2024-01-24 14:41:00'),
-(10, '1', '1', '1', '1', '2024-01-11 14:46:00', '2024-02-08 14:46:00'),
-(11, '1111', '1111', '1111', '1111', '2024-02-09 19:57:00', '2024-02-16 19:57:00'),
-(12, 'anhquan', '3', '3', 'quản lý dữ liệu', '2024-01-31 07:44:00', '2024-02-18 07:44:00'),
-(16, 'anhha', '3', '3', 'quản lý dữ liệu', '2024-02-14 07:46:00', '2024-02-24 07:46:00'),
-(17, 'anhhao', '11', '3', 'quản lý sinh viên', '2024-02-06 07:45:00', '2024-02-15 07:45:00'),
-(18, 'anhhao', '11', '3', 'quản lý dữ liệu', '2024-02-06 07:45:00', '2024-02-15 07:45:00'),
-(19, 'anhhao', '11', '3', 'quản lý dữ liệu', '2024-02-06 07:45:00', '2024-02-15 07:45:00'),
-(20, 'anhquan', '3', '3', 'quản lý dữ liệu', '2024-01-31 07:44:00', '2024-02-18 07:44:00'),
-(21, 'anhquan', '3', '3', 'quản lý dữ liệu', '2024-01-31 07:44:00', '2024-02-18 07:44:00'),
 (22, 'anhquan', '3', '3', 'quản lý dữ liệu', '2024-01-31 07:44:00', '2024-02-18 07:44:00'),
-(23, '1', 'nhóm 1', 'kỳ 1', 'quản lý dữ liệu', '2024-02-08 07:55:00', '2024-02-17 07:55:00');
+(23, '1', 'nhóm 1', 'kỳ 1', 'quản lý dữ liệu', '2024-02-08 07:55:00', '2024-02-17 07:55:00'),
+(24, 'ssssss', 'abc', 'aaaaaaaasascsfdsad', '', '2024-02-23 20:40:00', '2024-02-23 20:40:00'),
+(25, 'ss', 'nhóm 3', 'adasdasdas', 'aaaa2232', '2024-02-17 21:07:00', '2024-02-25 21:07:00'),
+(26, 'ss', 'nhóm 3', 'adasdasdas', 'aaaa2232', '2024-02-17 21:07:00', '2024-02-25 21:07:00');
 
 -- --------------------------------------------------------
 
@@ -251,10 +250,8 @@ CREATE TABLE `nhomtt` (
 --
 
 INSERT INTO `nhomtt` (`id`, `tennhom`, `detai`, `hotensinhvien`, `ngaybd`, `ngaykt`) VALUES
-(3, 'nhóm 1', '1', 'Trần Anh Quốc', '2024-01-17', '2024-02-03'),
-(6, 'sâ', '11', 'thư', '2024-01-11', '2024-02-04'),
-(7, 'aaa', 'aaa', 'Trần Anh Quốc', '2024-01-17', '2024-02-02'),
-(11, 'nhóm 2', 'quản lý dữ liệu', 'quốc thư', '2024-02-01', '2024-02-08');
+(15, 'nhóm 3', 'aa', 'Lê Khánh Đăng', '2024-02-21', '2024-02-16'),
+(16, 'nhóm 1s', 'aa', 'Lê Khánh Đăng', '2024-02-23', '2024-02-23');
 
 -- --------------------------------------------------------
 
@@ -282,10 +279,7 @@ CREATE TABLE `sinhvien` (
 --
 
 INSERT INTO `sinhvien` (`mssv`, `hotensinhvien`, `gioitinh`, `sdt`, `gmail`, `diachi`, `malop`, `truonghoc`, `nganh`, `khoa`, `nhomnguoihuongdan`, `id`) VALUES
-('2000416233', 'anhquoc', 'Nam', '0795915320', 'a@gmail.com', '1', '1', 'Sư phạm kỹ thuật', 'khoahoc', '1', '2', 101),
-('2000416210', 'Trần Anh Quốc', 'Nam', '0795915320', 'anhquoc@gmail.com', 'vĩnh long', '1ctt', 'truongkinhte', 'cntt', '45', 'nhom1', 102),
-('2000416234', 'Anh Thư', 'Nữ', '0795915323', 'thu@gmail.com', 'mang thít', '1', 'Sư phạm kỹ thuật', 'khoahoc', '1', 'anh Minh', 103),
-('2000416235', 'Nhựt Hào', 'Nam', '0795915324', 'Hao@gmail.com', 'mang thít', '1', 'Sư phạm kỹ thuật', 'khoahoc', '1', 'anh Minh', 104);
+('2000401821', 'Lê Khánh Đăng', 'Nam', '0977088488', 'khanhdang25062001@gmail.com', 'sss', '1ctt20a2', 'sdfsdf', 'âsas', '45', 'abc', 118);
 
 -- --------------------------------------------------------
 
@@ -303,6 +297,8 @@ CREATE TABLE `tendetai` (
 --
 
 INSERT INTO `tendetai` (`tendetai`, `mota`) VALUES
+('aaaa2232', 'asdasdasd            '),
+('aw1', 'â                                                                                                '),
 ('quản lý dữ liệu', 'thực hiện 3 sinh viên'),
 ('quản lý sinh viên', 'thực hiện khoảng 5-10 sinh viên');
 
@@ -322,9 +318,9 @@ CREATE TABLE `truong` (
 --
 
 INSERT INTO `truong` (`truonghoc`, `kyhieutruong`) VALUES
-('kt', '1'),
-('Sư phạm kỹ thuật', 'spkt'),
-('truongkinhte', 'tk1');
+('adasdasdasdasdasdasd', 'asdasdasdas'),
+('f', 'g'),
+('sdfsdf', '1');
 
 --
 -- Indexes for dumped tables
@@ -360,7 +356,7 @@ ALTER TABLE `kythuctap`
 -- Indexes for table `nganh`
 --
 ALTER TABLE `nganh`
-  ADD PRIMARY KEY (`nganh`);
+  ADD PRIMARY KEY (`tennganh`);
 
 --
 -- Indexes for table `nguoihuongdan`
@@ -408,7 +404,7 @@ ALTER TABLE `truong`
 -- AUTO_INCREMENT for table `congviec`
 --
 ALTER TABLE `congviec`
-  MODIFY `id_cv` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id_cv` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT for table `danhgia`
@@ -420,37 +416,37 @@ ALTER TABLE `danhgia`
 -- AUTO_INCREMENT for table `danhgiaandanh`
 --
 ALTER TABLE `danhgiaandanh`
-  MODIFY `id_danhgia` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_danhgia` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT for table `kythuctap`
 --
 ALTER TABLE `kythuctap`
-  MODIFY `id_kythuctap` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id_kythuctap` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
 
 --
 -- AUTO_INCREMENT for table `nguoihuongdan`
 --
 ALTER TABLE `nguoihuongdan`
-  MODIFY `id_nguoihuongdan` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id_nguoihuongdan` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `nhomnguoihd`
 --
 ALTER TABLE `nhomnguoihd`
-  MODIFY `id_nhomnguoihd` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `id_nhomnguoihd` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
 -- AUTO_INCREMENT for table `nhomtt`
 --
 ALTER TABLE `nhomtt`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `sinhvien`
 --
 ALTER TABLE `sinhvien`
-  MODIFY `id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=105;
+  MODIFY `id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=119;
 
 --
 -- Constraints for dumped tables
@@ -473,7 +469,7 @@ ALTER TABLE `kythuctap`
 --
 ALTER TABLE `sinhvien`
   ADD CONSTRAINT `sinhvien_ibfk_1` FOREIGN KEY (`truonghoc`) REFERENCES `truong` (`truonghoc`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `sinhvien_ibfk_2` FOREIGN KEY (`nganh`) REFERENCES `nganh` (`nganh`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `sinhvien_ibfk_2` FOREIGN KEY (`nganh`) REFERENCES `nganh` (`tennganh`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

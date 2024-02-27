@@ -1,6 +1,7 @@
 <?php
 // Kết nối đến cơ sở dữ liệu
-$mysqli = new mysqli('localhost', 'root', '', 'quanlysvtt');
+include('config/connect.php');
+
 
 // Kiểm tra kết nối
 if ($mysqli->connect_error) {
@@ -9,7 +10,7 @@ if ($mysqli->connect_error) {
 
 // Khởi tạo biến thông báo
 $notification = "";
-
+$successNotification = "";
 // Xử lý khi form được gửi
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Thực hiện sửa sinh viên
@@ -32,8 +33,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $edit_nganh = $row['nganh'];
             $edit_khoa = $row['khoa'];
             $edit_nhomnguoihuongdan = $row['nhomnguoihuongdan'];
-
             // Display student details in the form
+            echo "<div class='form'>";
             echo "<form method='POST'>";
             echo "<h3>Sửa Sinh viên</h3>";
             echo "<label>MSSV:</label>";
@@ -72,7 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             echo "<select name='edit_nganh' required>";
             $resultNganh = $mysqli->query("SELECT * FROM nganh");
             while ($rowNganh = $resultNganh->fetch_assoc()) {
-                echo "<option value='{$rowNganh['nganh']}' " . ($edit_nganh == $rowNganh['nganh'] ? 'selected' : '') . ">{$rowNganh['nganh']}</option>";
+                echo "<option value='{$rowNganh['tennganh']}' " . ($edit_nganh == $rowNganh['tennganh'] ? 'selected' : '') . ">{$rowNganh['tennganh']}</option>";
             }
             echo "</select>";
             echo "<br>";
@@ -83,9 +84,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             echo "<input type='text' name='edit_nhomnguoihuongdan' value='$edit_nhomnguoihuongdan' required>";
             echo "<br>";
             echo "<button type='submit' name='update'>Cập nhật</button>";
+            echo "<a href='themsv_php.php'><button style='background-color: grey;' type='button' class='btnquayve'>Quay Về </button></a>";
             echo "</form>";
+            echo "</div>"; // Closing div for form-container
         } else {
-            $notification = "Không tìm thấy sinh viên với MSSV: $mssv_to_edit";
+            $successNotification = "<span style='color: red;'>Không tìm thấy sinh viên với MSSV: $mssv_to_edit</span>";
+
         }
     }
 
@@ -108,9 +112,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $update_query = "UPDATE sinhvien SET hotensinhvien='$updated_hotensinhvien', gioitinh='$updated_gioitinh', sdt='$updated_sdt', gmail='$updated_gmail', diachi='$updated_diachi', malop='$updated_malop', truonghoc='$updated_truonghoc', nganh='$updated_nganh', khoa='$updated_khoa', nhomnguoihuongdan='$updated_nhomnguoihuongdan' WHERE mssv='$mssv_to_update'";
 
         if ($mysqli->query($update_query)) {
-            $notification = "Cập nhật thông tin sinh viên thành công.";
+           $successNotification = "Cập nhật thông tin sinh viên thành công.";
+           echo "<script>
+            setTimeout(function() {
+                window.location.href = 'themsv_php.php';
+            }, 2000); // 2000 milliseconds = 2 seconds
+         </script>";
         } else {
-            $notification = "Cập nhật thông tin sinh viên thất bại: " . $mysqli->error;
+            $successNotification = "<span style='color: red;'>Cập nhật thông tin sinh viên thất bại!" . $mysqli->error . "</span>";
         }
     }
 }
@@ -126,13 +135,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 <style>
     body {
-        background-color: #3498db; /* Màu nền xanh dương */
-        color: #ffffff; /* Màu chữ trắng */
+        background-color: #f0f7f9; /* Màu nền xanh dương */
+        color: #333; /* Màu chữ trắng */
         font-family: Arial, sans-serif; /* Kiểu font chữ */
         margin: 0;
         padding: 0;
     }
-
+    h3 {
+    text-align: center;
+}
     table {
         width: 100%;
         border-collapse: collapse;
@@ -150,22 +161,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     th {
         background-color: #2072b3; /* Màu nền xanh dương đậm cho phần header */
+        color: white;
     }
 
     tr:nth-child(even) {
-        background-color: #3498db; /* Màu nền xanh dương cho các hàng chẵn */
+        background-color: #e1edf4; /* Màu nền xanh dương cho các hàng chẵn */
     }
 
     tr:nth-child(odd) {
-        background-color: #2072b3; /* Màu nền xanh dương đậm cho các hàng lẻ */
+        background-color: #d4e5f7; /* Màu nền xanh dương đậm cho các hàng lẻ */
     }
 
     a {
-        color: #ffffff; /* Màu chữ trắng cho các liên kết */
+        color: #2072b3; /* Màu chữ trắng cho các liên kết */
     }
 
     a:hover {
-        color: #ffcc00; /* Màu chữ khi di chuột qua liên kết */
+        color: #ff6600; /* Màu chữ khi di chuột qua liên kết */
     }
 
     form {
@@ -173,7 +185,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     h2 {
-        color: #ffffff; /* Màu chữ trắng cho tiêu đề h2 */
+        color: #2072b3; /* Màu chữ trắng cho tiêu đề h2 */
     }
 
     input[type="text"], input[type="password"], input[type="email"], select {
@@ -194,19 +206,80 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     input[type="submit"]:hover {
         background-color: #3498db; /* Màu nền xanh dương khi di chuột qua nút submit */
     }
+    .form {
+            background: linear-gradient(rgba(135, 206, 250, 0), rgba(135, 204, 250, 0.7));
+            width: 700px;
+            margin: 0 auto;
+            text-align: center;
+            padding: 20px; /* Thêm khoảng cách xung quanh form */
+            border: 1px solid #ccc; /* Thêm đường viền */
+            border-radius: 10px; /* Bo góc của form */
+        }
+    .form input {
+            width: auto;
+            padding: 10px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            text-align: center;
+
+        }
+    .form label {
+        display: inline-block;
+        width: 150px; 
+        text-align: right; 
+        margin-right: 10px;
+        font-weight: bold;
+    }
+    .form select{
+        width: 190px;
+        padding: 10px;
+        box-sizing: border-box;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        text-align: center;
+
+    }
+    h2 {
+        text-align: center;
+        color: blue;
+        font-size: 30px;
+        /* background: cadetblue; */
+        text-shadow: 10px 2px 4px rgba(0, 0, 0, 0.5);
+    }
+    h3 {
+        color: black;
+        font-size: x-large; 
+    }
+    button {
+        display: inline-block;
+        /* width: calc(45% - 5px); */
+        margin-right: 10px;
+        padding: 10px;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        width: 130px;
+        /* text-align: center; */
+    }
     </style>
 <body>
+    
     <h2>Quản lý Sinh viên</h2>
-
+    <div class="form">
     <!-- Form Sửa Sinh viên -->
-    <?php echo $notification; ?>
     <form method="POST">
         <h3>Sửa Sinh viên</h3>
         <label>MSSV:</label>
         <input type="text" name="mssv_to_edit" required>
         <button type="submit" name="edit">Tìm kiếm</button>
+        <?php if (!empty($successNotification)): ?>
+                <div id="successNotification" style="color: green;"><?php echo $successNotification; ?></div>
+        <?php endif; ?>
     </form>
-    
+    </div>
     <!-- Bảng Danh sách Sinh viên -->
     <h3>Danh sách Sinh viên</h3>
     <table border="1">
@@ -222,7 +295,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <th>Ngành</th>
             <th>Khóa</th>
             <th>Nhóm người hướng dẫn</th>
-            
         </tr>
 
         <?php
@@ -259,9 +331,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <!-- This section is dynamically generated based on the search result -->
     
     <!-- Đóng kết nối -->
+    <script>
+        // Tự động đóng thông báo sau 3 giây
+        setTimeout(function() {
+            var successNotification = document.getElementById('successNotification');
+            if (successNotification) {
+                successNotification.style.display = 'none';
+            }
+        }, 3000);
+    </script>
     <?php
     $mysqli->close();
     ?>
+    <div class="w3-footer"><hr>
+        <span class="text-sm text-blue" style="font-size:12px ; color: #0073B7">
+            <p>TRƯỜNG ĐẠI HỌC SƯ PHẠM KỸ THUẬT VĨNH LONG</p>
+            <p>Địa chỉ: 73 Nguyễn Huệ, phường 2, thành phố Vỉnh Long, tỉnh Vỉnh Long<br>
+            Điện thoại: (+84) 02703.822141 - Fax: (+84) 02703.821003 - Email: spktvl@vlute.edu.vn</p>
+        </span>
+    </div>
 </body>
+
 </html>
-<p><a href="index.php">Quay lại trang chủ!</a></p>

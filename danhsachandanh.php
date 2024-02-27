@@ -1,105 +1,158 @@
+<?php
+// Kết nối đến cơ sở dữ liệu
+include('config/connect.php');
+
+// Kiểm tra kết nối
+if ($mysqli->connect_error) {
+    die('Connect Error (' . $mysqli->connect_errno . ') ' . $mysqli->connect_error);
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.4.2/css/all.css">
     <title>Đánh Giá</title>
-    <style>
-    body {
-        background-color: #3498db; /* Màu nền xanh dương */
-        color: #ffffff; /* Màu chữ trắng */
-        font-family: Arial, sans-serif; /* Kiểu font chữ */
-        margin: 0;
-        padding: 0;
-    }
+<style>
+     body {
+    background-color: #f0f7f9;
+    color: #333;
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+}
 
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 20px;
-    }
+form {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
 
-    table, th, td {
-        border: 1px solid #ffffff; /* Màu đường biên trắng */
-    }
+h2 {
+    text-align: center;
+    color: #2072b3;
+    font-size: 30px;
+    font-weight: bold;
+}
 
-    th, td {
-        padding: 10px;
-        text-align: left;
-    }
+label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: bold;
+    color: #2072b3;
+}
 
-    th {
-        background-color: #2072b3; /* Màu nền xanh dương đậm cho phần header */
-    }
+input[type="text"],
+input[type="password"],
+input[type="email"],
+select {
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    text-align: center;
+}
 
-    tr:nth-child(even) {
-        background-color: #3498db; /* Màu nền xanh dương cho các hàng chẵn */
-    }
+button[type="submit"] {
+    background-color: #2072b3;
+    color: #fff;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 16px;
+}
 
-    tr:nth-child(odd) {
-        background-color: #2072b3; /* Màu nền xanh dương đậm cho các hàng lẻ */
-    }
+button[type="submit"]:hover {
+    background-color: #3498db;
+}
 
-    a {
-        color: #ffffff; /* Màu chữ trắng cho các liên kết */
-    }
+textarea {
+    width: 100%;
+    height: 150px;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+    resize: none; /* Không cho phép resize textarea */
+}
 
-    a:hover {
-        color: #ffcc00; /* Màu chữ khi di chuột qua liên kết */
-    }
-
-    form {
-        margin-top: 20px;
-    }
-
-    h2 {
-        color: #ffffff; /* Màu chữ trắng cho tiêu đề h2 */
-    }
-
-    input[type="text"], select {
-        width: 10%;
-        padding: 8px;
-        margin: 5px 0;
-        box-sizing: border-box;
-    }
-
-    input[type="submit"] {
-        background-color: #2072b3; /* Màu nền xanh dương đậm cho nút submit */
-        color: #ffffff; /* Màu chữ trắng cho nút submit */
-        padding: 10px;
-        border: none;
-        cursor: pointer;
-    }
-
-    input[type="submit"]:hover {
-        background-color: #3498db; /* Màu nền xanh dương khi di chuột qua nút submit */
-    }
-</style>
+    </style>
 </head>
 <body>
-
+<div class="home">
+    <a href="index.php"> < Home</a>
+</div>
+<h2>ĐÁNH GIÁ ẨN DANH</h2>
+<div class="form">
 <form action="xulydanhgia.php" method="post">
     <label for="hoten">Họ và Tên Người hướng dẫn:</label>
-    <input type="text" id="hoten" name="hoten" required><br>
+    <select id="hoten" name="hoten" required>
+        <?php
+        // Query to fetch distinct values for 'tennhomnguoihuongdan' from your database
+        $nhomQuery = "SELECT DISTINCT ten FROM nguoihuongdan";
+        $nhomResult = $mysqli->query($nhomQuery);
 
-    <label for="mucdo">Mức Độ Hài Lòng:</label>
-    <select id="mucdo" name="mucdo" required>
-        <option value="1">Hài Lòng</option>
-        <option value="2">Rất Tốt</option>
-        <option value="3">Rất Rất Tốt</option>
-        <option value="4">Siêu Tốt</option>
-        <option value="5">Siêu Siêu Tốt</option>
-    </select><br>
+        // Check if the query was successful
+        if ($nhomResult) {
+            while ($row = $nhomResult->fetch_assoc()) {
+                $selected = ($row['ten'] == $editData['ten']) ? 'selected' : '';
+                echo "<option value='{$row['ten']}' $selected>{$row['ten']}</option>";
+            }
+        }
+        ?>
+</select><br>
+    
+    <label for="mucdo">Mức Độ Hài Lòng :</label>
+    <div class="rating">
+    <div class="rating">
+    <?php
+    // Dùng Unicode để hiển thị ngôi sao
+    $star_icon = "★"; // Mã Unicode của ngôi sao
+
+    for ($i = 1; $i <= 5; $i++) {
+        echo "<label class='rating-item'>";
+        echo "<input type='radio' name='mucdo' value='$i' required>";
+        echo "$i $star_icon"; // Hiển thị số lượng ngôi sao tương ứng
+        echo "</label>";
+    }
+    ?>
+</div><br>
+
+
+
+
+
 
     <label for="nhanxet">Nhận Xét:</label>
-    <textarea id="nhanxet" name="nhanxet" required></textarea><br>
+    <select id="nhanxet" name="nhanxet" required>
+        <option value="Rất hài lòng">Rất hài lòng</option>
+        <option value="Hài lòng">Hài lòng</option>
+        <option value="Không hài lòng">Không hài lòng</option>
+    </select><br>
 
     <label for="danhgiakhac">Đánh Giá Khác:</label>
     <textarea id="danhgiakhac" name="danhgiakhac" required></textarea><br>
 
-    <input type="submit" value="Thêm Đánh Giá">
+    <button type="submit"> Thêm đánh giá</button>
 </form>
 
+</div>
 </body>
+<div class="w3-footer"><hr>
+        <span class="text-sm text-blue" style="font-size:12px ; color: #0073B7">
+            <p>TRƯỜNG ĐẠI HỌC SƯ PHẠM KỸ THUẬT VĨNH LONG</p>
+            <p>Địa chỉ: 73 Nguyễn Huệ, phường 2, thành phố Vỉnh Long, tỉnh Vỉnh Long<br>
+            Điện thoại: (+84) 02703.822141 - Fax: (+84) 02703.821003 - Email: spktvl@vlute.edu.vn</p>
+        </span>
+    </div>
 </html>
-<p><a href="index.php">Quay lại trang chủ!</a></p>

@@ -4,7 +4,7 @@ $mysqli = new mysqli('localhost', 'root', '', 'quanlysvtt');
 if ($mysqli->connect_error) {
     die("Kết nối thất bại: " . $mysqli->connect_error);
 }
-
+$successNotification = "";
 if (!function_exists('sanitize')) {
     function sanitize($data)
     {
@@ -82,9 +82,9 @@ if (isset($_POST['add'])) {
     $result = $mysqli->query($insert_query);
 
     if ($result) {
-        echo "Bản ghi được thêm thành công!";
+        $successNotification = "Thêm nhóm người hướng dẫn thành công.";
     } else {
-        echo "Lỗi: " . $mysqli->error;
+         $successNotification = "<span style='color: red;'>Thêm không thành công ! " . $mysqli->error . "</span>";
     }
 }
 
@@ -97,9 +97,9 @@ if (isset($_POST['delete'])) {
     $result = $mysqli->query($delete_query);
 
     if ($result) {
-        echo "Bản ghi đã được xóa thành công!";
+        $successNotification = "Xoá thành công.";
     } else {
-        echo "Lỗi: " . $mysqli->error;
+        $successNotification = "<span style='color: red;'>Xoá thất bại! " . $mysqli->error . "</span>";
     }
 }
 
@@ -121,9 +121,9 @@ if (isset($_POST['update'])) {
     $result = $mysqli->query($update_query);
 
     if ($result) {
-        echo "Bản ghi đã được cập nhật thành công!";
+         $successNotification = "Cập nhật thành công.";
     } else {
-        echo "Lỗi: " . $mysqli->error;
+         $successNotification = "<span style='color: red;'>Cập nhật thất bại! " . $mysqli->error . "</span>";
     }
 }
 ?>
@@ -134,10 +134,10 @@ if (isset($_POST['update'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quản lý Nhóm HD</title>
-    <style>
-    body {
-        background-color: #3498db; /* Màu nền xanh dương */
-        color: #ffffff; /* Màu chữ trắng */
+<style>
+      body {
+        background-color: #f0f7f9; /* Màu nền xanh dương */
+        color: #333; /* Màu chữ trắng */
         font-family: Arial, sans-serif; /* Kiểu font chữ */
         margin: 0;
         padding: 0;
@@ -160,22 +160,23 @@ if (isset($_POST['update'])) {
 
     th {
         background-color: #2072b3; /* Màu nền xanh dương đậm cho phần header */
+        color: white;
     }
 
     tr:nth-child(even) {
-        background-color: #3498db; /* Màu nền xanh dương cho các hàng chẵn */
+        background-color: #e1edf4; /* Màu nền xanh dương cho các hàng chẵn */
     }
 
     tr:nth-child(odd) {
-        background-color: #2072b3; /* Màu nền xanh dương đậm cho các hàng lẻ */
+        background-color: #d4e5f7; /* Màu nền xanh dương đậm cho các hàng lẻ */
     }
 
     a {
-        color: #ffffff; /* Màu chữ trắng cho các liên kết */
+        color: #2072b3; /* Màu chữ trắng cho các liên kết */
     }
 
     a:hover {
-        color: #ffcc00; /* Màu chữ khi di chuột qua liên kết */
+        color: #ff6600; /* Màu chữ khi di chuột qua liên kết */
     }
 
     form {
@@ -183,10 +184,10 @@ if (isset($_POST['update'])) {
     }
 
     h2 {
-        color: #ffffff; /* Màu chữ trắng cho tiêu đề h2 */
+        color: #2072b3; /* Màu chữ trắng cho tiêu đề h2 */
     }
 
-    input[type="text"], select {
+    input[type="text"], input[type="password"], input[type="email"], select {
         width: 10%;
         padding: 8px;
         margin: 5px 0;
@@ -204,14 +205,125 @@ if (isset($_POST['update'])) {
     input[type="submit"]:hover {
         background-color: #3498db; /* Màu nền xanh dương khi di chuột qua nút submit */
     }
-</style>
-    <!-- Include jQuery -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <!-- Include Select2 CSS and JS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-beta.1/css/select2.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-beta.1/js/select2.min.js"></script>
+    .form {
+            background: linear-gradient(rgba(135, 206, 250, 0), rgba(135, 204, 250, 0.7));
+            width: 700px;
+            margin: 0 auto;
+            text-align: center;
+            padding: 20px; /* Thêm khoảng cách xung quanh form */
+            border: 1px solid #ccc; /* Thêm đường viền */
+            border-radius: 10px; /* Bo góc của form */
+        }
+    .form input {
+        width: 216PX;
+        padding: 10px;
+        box-sizing: border-box;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        text-align: center;
+        margin-top: 5px;
+    }
+    .form label {
+        display: inline-block;
+        width: 181px;
+        text-align: right;
+        margin-right: 10px;
+        font-weight: bold;
+    }
+    .form select{
+        width: 215px;
+        padding: 10px;
+        box-sizing: border-box;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        text-align: center;
 
-    <!-- Initialize Select2 for the "kithuctap", "tennhomthuctap", and "tendetai" dropdowns -->
+    }
+    h2 {
+        text-align: center;
+        color: blue;
+        font-size: 30px;
+        /* background: cadetblue; */
+        font-weight: bolder;
+    }
+    h3 {
+        color: black;
+        font-size: x-large; 
+        font-weight: bolder;
+    }
+    button {
+        display: inline-block;
+        /* width: calc(45% - 5px); */
+        margin-right: 10px;
+        padding: 10px;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        width: 130px;
+       
+    }
+    button {
+        margin-top: 20px;
+    }
+    .btndel {
+        background-color: red;
+        border: 1px solid black;
+        cursor: pointer;
+        font-size: 15px;
+        border-radius: 3PX;
+        opacity: 0.7;
+        width: 41px;
+        height: 40px;
+        }
+        .btndel:hover ,.btnedit:hover{
+          opacity: 1;
+        }
+        .btnedit{
+          background-color: #337ab7;
+          border: 1px solid black;
+          cursor: pointer;
+          font-size: 15px;
+          border-radius: 3PX;
+          opacity: 0.7;
+          width: 41px;
+          height: 40px;
+        }
+        td form {
+            display: inline-block;
+            margin-right: 10px;
+        }
+        .home {
+            background: #04AA6D;
+            /* width: auto; */
+            width: 90px;
+            margin-top: 20px;
+            margin-left: 29px;
+            /* text-decoration: none; */
+            font-size: 20px;
+            border-radius: 8px;
+        }
+        a {
+            color: white;
+            text-decoration: none;
+        }
+        .xoa {
+            text-align: center;
+            /* padding-top: 5px; */
+        }
+        input[type="number"] {
+            height: 30px;
+        }
+        a {
+            color: black;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-beta.1/css/select2.min.css">
+    
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.4.2/css/all.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-beta.1/js/select2.min.js"></script>
     <script>
         $(document).ready(function () {
             $('.select2').select2();
@@ -219,24 +331,28 @@ if (isset($_POST['update'])) {
     </script>
 </head>
 <body>
-
+<div class="home">
+        <a href="index.php"> < Home</a>
+    </div>
+   
 <h2>Thêm Bản Ghi</h2>
+<div class="form">
 <form method="post" action="nhomhd.php">
     <label>Tên Người Hướng Dẫn:</label>
     <input type="text" name="tennguoihuongdan" required><br>
-
     <label>Tên Nhóm Thực Tập:</label>
-    <select name="tennhomthuctap" class="select2" required>
+    <select name="tennhomthuctap"  required>
         <?php
         $nhomttOptions = getNhomttOptions();
         foreach ($nhomttOptions as $id => $tennhom) {
             echo "<option value=\"$id\">$tennhom</option>";
         }
         ?>
-    </select><br>
+    </select>
+    <br>
 
     <label>Kì Thực Tập:</label>
-    <select name="kithuctap" class="select2" required>
+    <select name="kithuctap"  required>
         <?php
         $kythuctapOptions = getKythuctapOptions();
         foreach ($kythuctapOptions as $id => $tenkythuctap) {
@@ -246,7 +362,7 @@ if (isset($_POST['update'])) {
     </select><br>
 
     <label>Tên Đề Tài:</label>
-    <select name="tendetai" class="select2" required>
+    <select name="tendetai"  required>
         <?php
         $tendetaiOptions = getTendetaiOptions();
         foreach ($tendetaiOptions as $tendetai) {
@@ -261,15 +377,29 @@ if (isset($_POST['update'])) {
     <label>Thời Gian Kết Thúc:</label>
     <input type="datetime-local" name="thoigianketthuc" required><br>
 
-    <input type="submit" name="add" value="Thêm Bản Ghi">
+    <button type="submit" name="add" >Thêm nhóm hướng dẫn</button>
 </form>
+    <?php if (!empty($successNotification)): ?>
+            <div id="successNotification" style="color: green;"><?php echo $successNotification; ?></div>
+            <script>
+            setTimeout(function() {
+            var successNotification = document.getElementById('successNotification');
+            if (successNotification) {
+                successNotification.style.display = 'none';
+            }
+        }, 2000); // 2000 milliseconds = 2 seconds
+    </script>
+    <?php endif; ?>
+</div>
 
-<h2>Xóa Bản Ghi</h2>
+<h2>Xóa nhóm hướng dẫn</h2>
+<div class="xoa">
 <form method="post" action="nhomhd.php">
     <label>ID cần Xóa:</label>
     <input type="number" name="id_to_delete" required><br>
-    <input type="submit" name="delete" value="Xóa Bản Ghi">
+    <button type="submit" name="delete" >Xóa nhóm hướng dẫn</button>
 </form>
+</div>
 
 <?php
 // Nếu có ID được chọn để sửa
@@ -283,54 +413,48 @@ if (isset($_GET['id_to_update'])) {
     if ($update_result->num_rows > 0) {
         $row = $update_result->fetch_assoc();
 ?>
-        <h2>Cập Nhật Bản Ghi</h2>
-        <form method="post" action="nhomhd.php">
-            <input type="hidden" name="id_to_update" value="<?php echo $row['id_nhomnguoihd']; ?>">
-            <label>Tên Người Hướng Dẫn:</label>
+<h2>Cập Nhật danh sách</h2>
+<div class="form">
+    <form method="post" action="nhomhd.php">
+        <input type="hidden" name="id_to_update" value="<?php echo $row['id_nhomnguoihd']; ?>">
+        <label>Tên Người Hướng Dẫn:</label>
             <input type="text" name="tennguoihuongdan" value="<?php echo $row['tennguoihuongdan']; ?>" required><br>
 
-            <label>Tên Nhóm Thực Tập:</label>
-            <select name="tennhomthuctap" class="select2" required>
-                <?php
-                foreach ($nhomttOptions as $id => $tennhom) {
+        <label>Tên Nhóm Thực Tập:</label>
+        <select name="tennhomthuctap"  required>
+            <?php
+            foreach ($nhomttOptions as $id => $tennhom) {
                     $selected = ($id == $row['tennhomthuctap']) ? 'selected' : '';
-                    echo "<option value=\"$id\" $selected>$tennhom</option>";
-                }
-                ?>
-            <label for="tennhomthuctap">Nhóm thực tập:</label>
-<select name="tennhomthuctap" class="select2" required>
-    <?php
-    $nhomttOptions = getNhomttOptions();
-    foreach ($nhomttOptions as $tennhom) {
-        echo "<option value=\"$tennhom\">$tennhom</option>";
-    }
-    ?>
-</select><br>
+                        echo "<option value=\"$id\" $selected>$tennhom</option>";
+                    }
+            ?>
+        </select><br>
 
-<label for="kithuctap">Kỳ thực tập:</label>
-<select name="kithuctap" class="select2" required>
-    <?php
-    $kythuctapOptions = getKythuctapOptions();
-    foreach ($kythuctapOptions as $tenkythuctap) {
-        echo "<option value=\"$tenkythuctap\">$tenkythuctap</option>";
-    }
-    ?>
-</select><br>
+        <label for="kithuctap">Kỳ thực tập:</label>
+        <select name="kithuctap"  required>
+            <?php
+            $kythuctapOptions = getKythuctapOptions();
+            foreach ($kythuctapOptions as $tenkythuctap) {
+                echo "<option value=\"$tenkythuctap\">$tenkythuctap</option>";
+            }
+            ?>
+        </select><br>
 
-            <label>Thời Gian Bắt Đầu:</label>
-            <input type="datetime-local" name="thoigianbatdau" value="<?php echo $row['thoigianbatdau']; ?>" required><br>
+        <label>Thời Gian Bắt Đầu:</label>
+        <input type="datetime-local" name="thoigianbatdau" value="<?php echo $row['thoigianbatdau']; ?>" required><br>
 
-            <label>Thời Gian Kết Thúc:</label>
-            <input type="datetime-local" name="thoigianketthuc" value="<?php echo $row['thoigianketthuc']; ?>" required><br>
+        <label>Thời Gian Kết Thúc:</label>
+        <input type="datetime-local" name="thoigianketthuc" value="<?php echo $row['thoigianketthuc']; ?>" required><br>
 
-            <input type="submit" name="update" value="Cập Nhật Bản Ghi">
+        <button type="submit" name="update" >Cập Nhật danh sách</button>
         </form>
-<?php
+    </div>
+        <?php
+        }
     }
-}
 ?>
 
-<h2>Danh Sách Bản Ghi</h2>
+<h2>Danh Sách nhóm hướng dẫn</h2>
 <?php
 $select_query = "SELECT * FROM nhomnguoihd WHERE id_nhomnguoihd >= 0 AND id_nhomnguoihd <= 999";
 $result = $mysqli->query($select_query);
@@ -348,7 +472,12 @@ if ($result->num_rows > 0) {
         echo "<td>" . $row['tendetai'] . "</td>";
         echo "<td>" . $row['thoigianbatdau'] . "</td>";
         echo "<td>" . $row['thoigianketthuc'] . "</td>";
-        echo "<td><a href='nhomhd.php?id_to_update=" . $row['id_nhomnguoihd'] . "'>Sửa</a></td>";
+
+        echo "<td><a href='nhomhd.php?id_to_update=" . $row['id_nhomnguoihd'] . "'>
+            <button class='btnedit'><i class='fa-solid fa-pen-to-square'></i></button>
+        </a>
+        </td>";
+
         echo "</tr>";
 
         // Additional row for detailed information
@@ -373,5 +502,11 @@ if ($result->num_rows > 0) {
 $mysqli->close();
 ?>
 </body>
+ <div class="w3-footer"><hr>
+    <span class="text-sm text-blue" style="font-size:12px ; color: #0073B7">
+            <p>TRƯỜNG ĐẠI HỌC SƯ PHẠM KỸ THUẬT VĨNH LONG</p>
+            <p>Địa chỉ: 73 Nguyễn Huệ, phường 2, thành phố Vỉnh Long, tỉnh Vỉnh Long<br>
+            Điện thoại: (+84) 02703.822141 - Fax: (+84) 02703.821003 - Email: spktvl@vlute.edu.vn</p>
+        </span>
+    </div>
 </html>
-<p><a href="index.php">Quay lại trang chủ!</a></p>

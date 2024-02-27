@@ -6,130 +6,213 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Danh sách đánh giá và Cập nhật</title>
     <style>
-        body {
-            background-color: #3498db;
-            color: #ffffff;
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
+      body {
+        background-color: #f0f7f9; /* Màu nền xanh dương */
+        color: #333; /* Màu chữ trắng */
+        font-family: Arial, sans-serif; /* Kiểu font chữ */
+        margin: 0;
+        padding: 0;
+    }
 
-        h2 {
-            color: #ffffff;
-            margin-top: 20px;
-        }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
 
-        form {
-            margin-top: 20px;
-            display: flex;
-            justify-content: center;
-        }
+    table, th, td {
+        border: 1px solid #ffffff; /* Màu đường biên trắng */
+    }
 
-        input[type="text"] {
-            width: 200px;
-            padding: 8px;
+    th, td {
+        padding: 10px;
+        text-align: left;
+    }
+
+    th {
+        background-color: #2072b3; /* Màu nền xanh dương đậm cho phần header */
+        color: white;
+    }
+
+    tr:nth-child(even) {
+        background-color: #e1edf4; /* Màu nền xanh dương cho các hàng chẵn */
+    }
+
+    tr:nth-child(odd) {
+        background-color: #d4e5f7; /* Màu nền xanh dương đậm cho các hàng lẻ */
+    }
+
+    a {
+        color: #2072b3; /* Màu chữ trắng cho các liên kết */
+    }
+
+    a:hover {
+        color: #ff6600; /* Màu chữ khi di chuột qua liên kết */
+    }
+
+    form {
+        margin-top: 20px;
+    }
+
+    h2 {
+        color: #2072b3; /* Màu chữ trắng cho tiêu đề h2 */
+    }
+
+    input[type="text"], input[type="password"], input[type="email"], select {
+        width: 10%;
+        padding: 8px;
+        margin: 5px 0;
+        box-sizing: border-box;
+    }
+
+    input[type="submit"] {
+        background-color: #2072b3; /* Màu nền xanh dương đậm cho nút submit */
+        color: #ffffff; /* Màu chữ trắng cho nút submit */
+        padding: 10px;
+        border: none;
+        cursor: pointer;
+    }
+
+    input[type="submit"]:hover {
+        background-color: #3498db; /* Màu nền xanh dương khi di chuột qua nút submit */
+    }
+    .form {
+            background: linear-gradient(rgba(135, 206, 250, 0), rgba(135, 204, 250, 0.7));
+            width: 700px;
+            margin: 0 auto;
+            text-align: center;
+            padding: 20px; /* Thêm khoảng cách xung quanh form */
+            border: 1px solid #ccc; /* Thêm đường viền */
+            border-radius: 10px; /* Bo góc của form */
+        }
+    .form input {
+            width: auto;
+            padding: 10px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            text-align: center;
+
+        }
+    .form label {
+        display: inline-block;
+        width: 150px; 
+        text-align: right; 
+        margin-right: 10px;
+        font-weight: bold;
+    }
+    .form select{
+        width: 215px;
+        padding: 10px;
+        box-sizing: border-box;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        text-align: center;
+
+    }
+    h2 {
+        text-align: center;
+        color: blue;
+        font-size: 30px;
+        font-weight: bolder;
+    }
+    h3 {
+        color: black;
+        font-size: x-large; 
+        font-weight: bolder;
+    }
+    button {
+        display: inline-block;
+        /* width: calc(45% - 5px); */
+        margin-right: 10px;
+        padding: 10px;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        width: 130px;
+        /* text-align: center; */
+    }
+    .btndel {
+        background-color: red;
+        border: 1px solid black;
+        cursor: pointer;
+        font-size: 15px;
+        border-radius: 3PX;
+        opacity: 0.7;
+        width: 41px;
+        height: 40px;
+        }
+        .btndel:hover ,.btnedit:hover{
+          opacity: 1;
+        }
+        .btnedit{
+          background-color: #337ab7;
+          border: 1px solid black;
+          cursor: pointer;
+          font-size: 15px;
+          border-radius: 3PX;
+          opacity: 0.7;
+          width: 41px;
+          height: 40px;
+        }
+        td form {
+            display: inline-block;
             margin-right: 10px;
-            box-sizing: border-box;
         }
-
-        button {
-            background-color: #2072b3;
-            color: #ffffff;
-            padding: 10px;
-            border: none;
-            cursor: pointer;
-        }
-
-        button:hover {
-            background-color: #3498db;
-        }
-
-        table {
-            width: 80%;
-            border-collapse: collapse;
+        .home {
+            background: #04AA6D;
+            /* width: auto; */
+            width: 77px;
             margin-top: 20px;
+            margin-left: 29px;
+            /* text-decoration: none; */
+            font-size: 20px;
+            border-radius: 8px;
         }
-
-        th,
-        td {
-            border: 1px solid #ffffff;
-            padding: 10px;
-            text-align: left;
-        }
-
-        th {
-            background-color: #2072b3;
-        }
-
-        tr:nth-child(even) {
-            background-color: #3498db;
-        }
-
-        tr:nth-child(odd) {
-            background-color: #2072b3;
-        }
-
-        form table {
-            width: 100%;
-        }
-
-        form table input[type="text"],
-        form table textarea {
-            width: 90%;
-            padding: 8px;
-            margin-bottom: 5px;
-            box-sizing: border-box;
-        }
-
-        form table button {
-            background-color: #2072b3;
-            color: #ffffff;
-            padding: 8px;
-            border: none;
-            cursor: pointer;
-        }
-
-        form table button:hover {
-            background-color: #3498db;
-        }
-
         a {
-            color: #ffffff;
+            color: white;
             text-decoration: none;
         }
-
-        a:hover {
-            color: #ffcc00;
+        .formds input[type="text"] {
+            width: 78px;
+            text-align: center;
+            border-radius: 5px;
         }
-
-        p {
-            margin-top: 20px;
+        .formds textarea {
+            width: 78px;
+            text-align: center;
+            border-radius: 5px;
         }
     </style>
 </head>
 
 <body>
+    <div class="home">
+        <a href="index.php"> < Home</a>
+    </div>
     <h2>Danh sách đánh giá và Cập nhật</h2>
+    <div class="form">     
     <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="GET">
         <input type="text" name="hoten" placeholder="Nhập họ tên sinh viên">
         <button type="submit">Tìm kiếm</button>
     </form>
+    </div >
 
     <?php
     $conn = mysqli_connect('localhost', 'root', '', 'quanlysvtt');
     if (!$conn) {
         die("Connection failed: " . mysqli_connect_error());
     }
-
+    $successNotification = "";
     if (isset($_GET['hoten'])) {
         $hoten = $_GET['hoten'];
         $sql = "SELECT * FROM danhgia WHERE hotensinhvien LIKE '%$hoten%'";
         $result = mysqli_query($conn, $sql);
 
         if (mysqli_num_rows($result) > 0) {
+            echo "<div class='formds'>";
             echo "<form action='" . $_SERVER['PHP_SELF'] . "' method='POST'>";
             echo "<table>
             <tr>
@@ -181,9 +264,21 @@
             }
             echo "</table>";
             echo "</form>";
+            echo "</div>";
         } else {
-            echo "<p>Không tìm thấy kết quả!</p>";
+            $successNotification = "Không tìm thấy kết quả!";
         }
+        if (!empty($successNotification)) {
+        echo "<div id='searchNotification' style='color: red; font-weight: bold; text-align: center;'>$successNotification</div>";
+        echo "<script>
+            setTimeout(function() {
+                var searchNotification = document.getElementById('searchNotification');
+                if (searchNotification) {
+                    searchNotification.style.display = 'none';
+                }
+            }, 2000);
+        </script>";
+    }
     }
 
     if (isset($_POST['update'])) {
@@ -215,16 +310,28 @@
         khananggiaiquyetcongviec='$khananggiaiquyetcongviec', diemkhananggiaiquyetcongviec='$diemkhananggiaiquyetcongviec', 
         danhgiachung='$danhgiachung', ngaydanhgia='$ngaydanhgia' WHERE id='$id'";
         if (mysqli_query($conn, $update_query)) {
-            echo "<p>Cập nhật dữ liệu thành công!</p>";
+            echo "<p id='updateNotification' style='color:green; text-align:center;'>Cập nhật dữ liệu thành công!</p>";
+            echo "<script>
+            var updateNotification = document.getElementById('updateNotification');
+            if (updateNotification) {
+                updateNotification.style.display = 'block';
+                setTimeout(function() {
+                    updateNotification.style.display = 'none';
+                }, 2000);
+            }
+          </script>";
         } else {
             echo "<p>Lỗi: " . mysqli_error($conn) . "</p>";
         }
     }
-
     mysqli_close($conn);
     ?>
-
-    <p><a href="index.php">Quay lại trang chủ!</a></p>
 </body>
-
+<div class="w3-footer"><hr>
+        <span class="text-sm text-blue" style="font-size:12px ; color: #0073B7">
+            <p>TRƯỜNG ĐẠI HỌC SƯ PHẠM KỸ THUẬT VĨNH LONG</p>
+            <p>Địa chỉ: 73 Nguyễn Huệ, phường 2, thành phố Vỉnh Long, tỉnh Vỉnh Long<br>
+            Điện thoại: (+84) 02703.822141 - Fax: (+84) 02703.821003 - Email: spktvl@vlute.edu.vn</p>
+        </span>
+    </div>
 </html>

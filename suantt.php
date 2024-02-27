@@ -4,69 +4,32 @@ include('config/connect.php');
 if ($mysqli->connect_error) {
     die('Connect Error (' . $mysqli->connect_errno . ') ' . $mysqli->connect_error);
 }
-
-$successNotification = "";
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (isset($_POST['add'])) {
+$id = $_GET['id'];
+    $sua = "SELECT * FROM nhomtt WHERE id='$id'" ;
+    $query_sua = mysqli_query($mysqli,$sua);
+    $row = mysqli_fetch_array($query_sua);
+    if (isset($_POST['edit'])) {
         $tennhom = $_POST['tennhom'];
         $detai = $_POST['detai'];
         $hotensinhvien = $_POST['hotensinhvien'];
         $ngaybd = $_POST['ngaybd'];
         $ngaykt = $_POST['ngaykt'];
 
-        $checkQuery = "SELECT * FROM nhomtt WHERE tennhom = '$tennhom'";
-        $checkResult = $mysqli->query($checkQuery);
-
-        if ($checkResult->num_rows > 0) {
-            $successNotification = "Tên nhóm đã tồn tại.";
-        } else {
-            $query = "INSERT INTO nhomtt (tennhom, detai, hotensinhvien, ngaybd, ngaykt) 
-                      VALUES ('$tennhom', '$detai', '$hotensinhvien', '$ngaybd', '$ngaykt')";
-
+        $query = "UPDATE nhomtt SET tennhom ='$tennhom',detai ='$detai', hotensinhvien = '$hotensinhvien', ngaybd ='$ngaybd',ngaykt ='$ngaykt' WHERE id='$id'";  
+                
             if ($mysqli->query($query)) {
-                $successNotification = "Thêm nhóm thành công.";
+                $successNotification = "Cập nhật thông tin thành công.";
+                echo "<script>
+                    setTimeout(function() {
+                    window.location.href = 'themxoasuanhomtt.php';
+                    }, 2000); // 2000 milliseconds = 2 seconds
+                </script>";
             } else {
-                $successNotification = "Thêm nhóm thất bại: " . $mysqli->error;
+               $successNotification = "<span style='color: red;'>Cập nhật thông tin thất bại!" . $mysqli->error . "</span>";
             }
         }
-    } elseif (isset($_POST['delete'])) {
-        $id = $_POST['delete_id'];
-        if ($mysqli->query("DELETE FROM nhomtt WHERE id=$id")) {
-            $successNotification = "Xóa nhóm thành công.";
-        } else {
-            $successNotification = "Xóa nhóm thất bại: " . $mysqli->error;
-        }
-    } elseif (isset($_POST['edit'])) {
-        $id = $_POST['edit_id'];
-        $new_tennhom = $_POST['new_tennhom'];
-        $new_detai = $_POST['new_detai'];
-        $new_hotensinhvien = $_POST['new_hotensinhvien'];
-        $new_ngaybd = $_POST['new_ngaybd'];
-        $new_ngaykt = $_POST['new_ngaykt'];
 
-        $updateData = [];
-        if (!empty($new_tennhom)) $updateData[] = "tennhom='$new_tennhom'";
-        if (!empty($new_detai)) $updateData[] = "detai='$new_detai'";
-        if (!empty($new_hotensinhvien)) $updateData[] = "hotensinhvien='$new_hotensinhvien'";
-        if (!empty($new_ngaybd)) $updateData[] = "ngaybd='$new_ngaybd'";
-        if (!empty($new_ngaykt)) $updateData[] = "ngaykt='$new_ngaykt'";
-
-        if (!empty($updateData)) {
-            $query = "UPDATE nhomtt SET " . implode(", ", $updateData) . " WHERE id=$id";
-
-            if ($mysqli->query($query)) {
-                $successNotification = "Sửa nhóm thành công.";
-            } else {
-                $successNotification = "Sửa nhóm thất bại: " . $mysqli->error;
-            }
-        } else {
-            $notification = "Không có dữ liệu mới để cập nhật.";
-        }
-    }
-}
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -200,12 +163,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         text-align: center;
         color: blue;
         font-size: 30px;
-        font-weight: bolder;
+        /* background: cadetblue; */
+        text-shadow: 10px 2px 4px rgba(0, 0, 0, 0.5);
     }
     h3 {
         color: black;
         font-size: x-large; 
-        font-weight: bolder;
     }
     button {
         display: inline-block;
@@ -255,29 +218,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             color: white;
             text-decoration: none;
         }
-         .home {
-            background: #04AA6D;
-            /* width: auto; */
-            width: 77px;
-            margin-top: 20px;
-            margin-left: 29px;
-            /* text-decoration: none; */
-            font-size: 20px;
-            border-radius: 8px;
-        }
     </style>
 </head>
 <body>
-    <div class="home">
-        <a href="index.php"> < Home</a>
-    </div>
     <h2>Quản lý Nhóm Thực Tập</h2>
 <div class="form">
     <!-- Form Thêm Nhóm -->
     <form method="POST">
-        <h3>Thêm Nhóm</h3>
+        <h3>Sửa Nhóm</h3>
         <label>Tên Nhóm:</label>
-        <input type="text" name="tennhom" required>
+        <input type="text" name="tennhom" value="<?php echo $row['tennhom'] ?>" required>
         <br>
         <label>Đề Tài:</label>
         <select name="detai" required>
@@ -297,30 +247,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </select>
         <br>
         <label>Họ Tên Sinh Viên:</label>
-        <select id="selectSinhVien" class="select2" name="hotensinhvien" required>
-            <!-- Options will be dynamically loaded -->
+        <select name="hotensinhvien" required>
+            <?php
+            // Query to fetch distinct values for 'tennhomnguoihuongdan' from your database
+            $nhomQuery = "SELECT DISTINCT hotensinhvien FROM sinhvien";
+            $nhomResult = $mysqli->query($nhomQuery);
+
+            // Check if the query was successful
+            if ($nhomResult) {
+                while ($row = $nhomResult->fetch_assoc()) {
+                    $selected = ($row['hotensinhvien'] == $editData['hotensinhvien']) ? 'selected' : '';
+                    echo "<option value='{$row['hotensinhvien']}' $selected>{$row['hotensinhvien']}</option>";
+                }
+            }
+            ?>
         </select>
+
         <br>
         <label>Ngày Bắt Đầu:</label>
-        <input type="date" name="ngaybd" required>
+        <input type="date" name="ngaybd" value="<?php echo $row['ngaybd'] ?>" required>
         <br>
         <label>Ngày Kết Thúc:</label>
-        <input type="date" name="ngaykt" required>
+        <input type="date" name="ngaykt" value="<?php echo $row['ngaykt'] ?>" required>
         <br>
-        <button type="submit" name="add">Thêm</button>
+        <button type="submit" name="edit">Cập nhật</button>
+        <a href="themxoasuanhomtt.php"><button style="background-color: grey;" type="button" class="btnquayve">Quay Về </button></a>
     </form>
-        <?php if (!empty($successNotification)): ?>
+     <?php if (!empty($successNotification)): ?>
             <div id="successNotification" style="color: green;"><?php echo $successNotification; ?></div>
-            <script>
-            setTimeout(function() {
-            var successNotification = document.getElementById('successNotification');
-                if (successNotification) {
-                    successNotification.style.display = 'none';
-                }
-            }, 2000); // 2000 milliseconds = 2 seconds
-            </script>
-        <?php endif; ?>
+    <?php endif; ?>
 </div>
+    <?php if (!empty($notification)): ?>
+        <div style="color: #ff0000;"><?php echo $notification; ?></div>
+    <?php endif; ?>
 
     <!-- Bảng Danh sách Nhóm -->
     <h3>Danh sách Nhóm</h3>
@@ -347,10 +306,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             echo "<td>{$row['ngaybd']}</td>";
             echo "<td>{$row['ngaykt']}</td>";
             echo "<td class='actions'>
-                    <form <form method='POST' onsubmit='return confirm(\"Bạn có chắc chắn muốn xoá nhóm thực tập này không?\");'>
-                        <input type='hidden' name='delete_id' value='{$row['id']}'>
-                        <button class='btndel' name='delete'><i class='fa-solid fa-trash-can'></i></button>
-                    </form>  
+                    
                         <a href='suantt.php?id=" . $row['id'] . "'>
                             <button class='btnedit'><i class='fa-solid fa-pen-to-square'></i></button>
                         </a> 
